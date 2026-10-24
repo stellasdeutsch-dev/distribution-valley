@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Distribution Valley</title>
+<meta name="description" content="Day 1 of Statistical Learning: six distributions, mean and variance, explained simply with Dota 2 examples and an interactive explorer.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=Instrument+Sans:wght@400..700&family=STIX+Two+Text:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: farm-app landing page — sky-blue illustrated panels, a white curved content sheet, pastel cards, phone mockups. One committed light look. */
+:root{
+  color-scheme:light;
+  --sky:#4b8cf5; --sky-2:#78b2ff; --sky-3:#c7e2ff; --sky-pale:#ecf5ff;
+  --ink:#121419; --ink-2:#596071; --line:#e4e8ef; --white:#ffffff; --paper:#f7f9fc;
+  --green:#4f9a54; --green-dark:#2f6f41; --green-light:#8cc56a; --green-pale:#e8f5e2;
+  --peach:#fde9da; --orange:#ff8a3d; --cyan:#8fe3f3; --blue-pale:#e4eeff; --wheat:#f2c96b;
+  --display:"Inter", "Helvetica Neue", Arial, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --math:"STIX Two Text", "Times New Roman", serif;
+  --r-xl:36px; --r-l:24px; --r-m:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--white);color:var(--ink);font:400 17px/1.6 var(--body);padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));padding-block:14px 40px}
+img{max-width:100%}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.03em;line-height:1.08;text-wrap:balance;font-weight:600}
+h2{font-size:clamp(30px,4.6vw,52px)}
+h3{font-size:20px;letter-spacing:-.015em;line-height:1.2}
+p{margin:0}
+a{color:inherit}
+.m{font-family:var(--math);font-style:italic;white-space:nowrap;font-size:1.06em}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.tag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--white);color:var(--ink);border-radius:99px;padding:6px 13px 6px 10px;font-size:13px;font-weight:600;box-shadow:0 1px 0 rgba(18,20,25,.06),0 4px 14px rgba(40,90,180,.10)}
+.tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sky)}
+.tag.center{align-self:center}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:13px 22px;font:600 15px var(--display);text-decoration:none;border:0;cursor:pointer}
+.btn.dark{background:var(--ink);color:var(--white)}
+.btn.cyan{background:var(--cyan);color:var(--ink)}
+.btn.white{background:var(--white);color:var(--ink)}
+.btn:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,.dcard:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:99px;padding:8px 8px 8px 16px;max-width:900px;width:100%;margin:0 auto}
+.logo{display:flex;align-items:center;gap:8px;font:700 16px var(--display);letter-spacing:-.02em;text-decoration:none}
+.logo svg{width:28px;height:28px}
+.links{display:flex;gap:22px;font-size:14px;font-weight:500}
+.links a{text-decoration:none;color:var(--ink-2)}
+.links a:hover{color:var(--ink)}
+
+/* sky panel */
+.sky{position:relative;border-radius:var(--r-xl);overflow:hidden;background:linear-gradient(180deg,var(--sky) 0%,var(--sky-2) 55%,var(--sky-3) 100%);color:var(--white)}
+.scene{position:absolute;inset:auto 0 0 0;width:100%;height:auto;display:block;pointer-events:none}
+.hero{padding-block:clamp(48px,7vw,92px) 0;padding-inline:clamp(18px,4vw,56px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;min-height:0}
+.hero h1{font-size:clamp(38px,6.2vw,74px);font-weight:600;letter-spacing:-.04em;max-width:15ch}
+.hero .lead{max-width:56ch;font-size:clamp(16px,1.6vw,18px);opacity:.95}
+.hero-stage{position:relative;width:100%;display:flex;justify-content:center;margin-top:18px;padding-bottom:0}
+.hero-stage .scene{z-index:0}
+.drone{position:absolute;left:12%;top:4%;width:clamp(90px,14vw,170px);z-index:2;animation:hover 4s ease-in-out infinite}
+@keyframes hover{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(-5deg)}}
+.blade{transform-box:fill-box;transform-origin:center;animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.drone,.blade{animation:none}html{scroll-behavior:auto}}
+
+/* phone */
+.phone{position:relative;z-index:3;width:min(330px,86vw);background:var(--ink);border-radius:46px;padding:10px;box-shadow:0 30px 60px rgba(10,40,90,.35)}
+.screen{background:var(--white);border-radius:37px;overflow:hidden;color:var(--ink);text-align:left}
+.status{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 6px;font:600 13px var(--display)}
+.island{width:92px;height:26px;background:var(--ink);border-radius:20px}
+.ph-top{position:relative;height:170px;overflow:hidden;background:linear-gradient(180deg,#5d9bf7,#a9d2ff)}
+.ph-top .hello{position:absolute;left:16px;top:12px;display:flex;gap:10px;align-items:center;color:var(--white);z-index:2}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--orange);display:grid;place-items:center;font:700 14px var(--display)}
+.hello small{display:block;font-size:11px;opacity:.85;line-height:1.1}
+.hello b{font:600 14px var(--display)}
+.ph-body{padding:12px 14px 16px;display:flex;flex-direction:column;gap:10px}
+.chips2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:9px 10px;display:flex;gap:8px;align-items:center;font-size:12px;line-height:1.25}
+.mini i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:13px;flex-shrink:0}
+.mini b{display:block;font-size:13px}
+.qa{font:600 13px var(--display)}
+.row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:9px 10px;font-size:12px;line-height:1.25}
+.row i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;flex-shrink:0}
+.row b{display:block;font-size:13px}
+.pts{margin-left:auto;font-size:11px;font-weight:600;color:#a26a00;background:#fff3cf;border-radius:99px;padding:3px 8px;white-space:nowrap}
+
+/* works with */
+.works{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(18px,4vw,52px);padding-block:26px;color:#a7adba;font:600 clamp(16px,2vw,21px) var(--display);letter-spacing:-.02em}
+.works span{display:inline-flex;align-items:center;gap:8px}
+.works svg{width:22px;height:22px}
+
+/* white sections */
+.section{display:flex;flex-direction:column;gap:26px;padding-block:clamp(40px,6vw,72px);padding-inline:clamp(4px,3vw,40px)}
+.section .head{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.section .head p{color:var(--ink-2);max-width:60ch}
+.left .head{align-items:flex-start;text-align:left}
+.grid{display:grid;gap:16px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pcard{border-radius:var(--r-l);overflow:hidden;display:flex;flex-direction:column;min-width:0;border:1px solid rgba(18,20,25,.05)}
+.pcard .art{display:block;width:100%;height:auto;aspect-ratio:16/10;max-width:100%}
+.pcard .txt{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px}
+.pcard .txt p{font-size:15.5px;color:#3c4251}
+.c-green{background:var(--green-pale)}
+.c-blue{background:var(--blue-pale)}
+.c-peach{background:var(--peach)}
+.formula{font-family:var(--math);font-style:italic;font-size:clamp(19px,2.3vw,24px);background:var(--white);border-radius:var(--r-m);padding:14px 16px;text-align:center;overflow-x:auto;line-height:1.5}
+.formula small{display:block;font:500 13px var(--body);color:var(--ink-2);font-style:normal}
+
+/* worked example */
+.sheet{background:var(--paper);border-radius:var(--r-xl);padding:clamp(20px,4vw,44px);display:flex;flex-direction:column;gap:22px}
+.wtable{overflow-x:auto;border-radius:var(--r-m);background:var(--white);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:420px;font-variant-numeric:tabular-nums}
+th,td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line);font-size:15.5px}
+th{color:var(--ink-2);font-weight:600;font-size:13.5px}
+td:first-child,th:first-child{text-align:left}
+tr:last-child td{border-bottom:0;font-weight:700}
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-radius:var(--r-m);padding:14px 16px}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--white);display:grid;place-items:center;font:700 13px var(--display);flex-shrink:0}
+.step p{font-size:15.5px}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rule{background:var(--white);border-radius:var(--r-m);border:1px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.rule .m{font-size:19px}
+.rule span{font-size:14px;color:var(--ink-2)}
+
+/* explorer */
+.hub{padding-block:clamp(44px,6vw,80px) clamp(150px,18vw,230px);padding-inline:clamp(14px,4vw,48px);display:flex;flex-direction:column;gap:26px;align-items:center;text-align:center}
+.hub h2{max-width:18ch}
+.hub .lead{max-width:56ch;opacity:.95}
+.hub-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:center;width:100%;text-align:left}
+.side{display:flex;flex-direction:column;gap:14px}
+.scard{background:var(--white);color:var(--ink);border-radius:var(--r-m);padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 10px 30px rgba(20,60,130,.18);min-width:0}
+.scard .k{font-size:12.5px;color:var(--ink-2);font-weight:600}
+.scard .v{font:700 26px var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.scard .v small{font:500 13px var(--body);color:var(--ink-2);margin-left:6px}
+.track{height:7px;background:#eef1f6;border-radius:99px;position:relative;overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--orange);transition:width .3s}
+.track.blue i{background:var(--sky)}
+.track.green i{background:var(--green)}
+.scard p{font-size:14px;color:#3c4251}
+.pill-s{align-self:flex-start;font-size:11px;font-weight:600;border-radius:99px;padding:3px 9px;background:#fff1e4;color:#b55a14}
+.pill-s.b{background:var(--blue-pale);color:#2856b8}
+.pill-s.g{background:var(--green-pale);color:var(--green-dark)}
+.xphone{width:min(370px,92vw)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 14px 8px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex-shrink:0;border:1px solid var(--line);background:var(--white);border-radius:99px;padding:7px 12px;font:600 12.5px var(--display);color:var(--ink-2);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.xbody{padding:4px 14px 16px;display:flex;flex-direction:column;gap:10px}
+.xtitle{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.xtitle b{font:600 17px var(--display)}
+.xtitle span{font-size:11.5px;color:var(--ink-2)}
+.xformula{font-family:var(--math);font-style:italic;font-size:16px;background:var(--paper);border-radius:12px;padding:8px 10px;text-align:center;overflow-x:auto;white-space:nowrap}
+#chart{width:100%;height:auto;display:block;background:linear-gradient(180deg,#f3f8ff,#ffffff);border-radius:14px;border:1px solid var(--line)}
+.sliders{display:flex;flex-direction:column;gap:8px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:12.5px}
+.sl label{color:var(--ink-2);font-weight:600}
+.sl output{font:700 13px var(--display);font-variant-numeric:tabular-nums}
+.sl input{grid-column:1 / -1;width:100%;accent-color:var(--sky)}
+
+/* distribution cards */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);background:var(--white);border-radius:99px;padding:8px 16px;font:600 13.5px var(--display);cursor:pointer;color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.feature{display:grid;grid-template-columns:1fr 1fr;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line);background:var(--white)}
+.feature svg{width:100%;height:100%;display:block;min-height:260px}
+.feature .txt{padding:clamp(18px,3vw,32px);display:flex;flex-direction:column;gap:12px}
+.feature ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:15.5px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.meta span{font-size:12.5px;border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.dcard{background:var(--white);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit;transition:transform .2s,box-shadow .2s}
+.dcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(30,60,120,.12)}
+@media (prefers-reduced-motion:reduce){.dcard{transition:none}.dcard:hover{transform:none}}
+.dcard svg{width:100%;height:auto;aspect-ratio:16/9;display:block}
+.dcard .txt{padding:14px 16px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.dcard .txt p{font-size:14.5px;color:#3c4251}
+.kind{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:3px 9px}
+.kind::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.kind.cont::before{background:var(--orange)}
+
+/* exam wall */
+.wall{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.wall .intro{display:flex;flex-direction:column;gap:14px;position:sticky;top:90px}
+.col{display:flex;flex-direction:column;gap:14px}
+.quote{border-radius:var(--r-m);padding:16px 18px;display:flex;flex-direction:column;gap:12px;font-size:15px}
+.quote .who{display:flex;align-items:center;gap:10px;font-size:13px}
+.quote .who i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--display);font-style:normal;background:var(--white)}
+.quote .who b{display:block;font-size:13.5px}
+.stars{margin-left:auto;font-weight:700;font-size:13px;white-space:nowrap}
+.stars::before{content:"★ ";color:#f2a500}
+.q-peach{background:var(--peach)}
+.q-blue{background:var(--blue-pale)}
+.q-green{background:var(--green-pale)}
+
+/* faq */
+.faq{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+details{background:var(--white);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 18px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:14px;font:600 16px var(--display);letter-spacing:-.01em}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:400 24px/0.9 var(--display);color:var(--ink);flex-shrink:0}
+details[open] summary::after{content:"−"}
+details .a{margin-top:10px;font-size:15.5px;color:#3c4251;display:flex;flex-direction:column;gap:6px;max-width:66ch}
+.faq-wrap{background:linear-gradient(180deg,var(--sky-pale),var(--white));border-radius:var(--r-xl)}
+
+/* final */
+.final{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-block:clamp(44px,6vw,80px) 0;padding-inline:clamp(18px,4vw,56px)}
+.final .copy{display:flex;flex-direction:column;gap:16px;padding-bottom:clamp(120px,15vw,200px);position:relative;z-index:2;max-width:46ch}
+.final h2{color:var(--ink)}
+.final p{color:#1f2b44}
+.final .ctas{display:flex;gap:10px;flex-wrap:wrap}
+.final .phone{align-self:end;margin-bottom:-40px;transform:rotate(6deg)}
+.done{padding:22px 18px;display:flex;flex-direction:column;gap:10px}
+.done b{font:600 22px var(--display);letter-spacing:-.02em;line-height:1.15}
+.checklist{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.checklist span{display:flex;gap:8px;align-items:center}
+.checklist span::before{content:"✓";width:20px;height:20px;border-radius:50%;background:var(--green-pale);color:var(--green-dark);display:grid;place-items:center;font-size:11px;font-weight:700}
+footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
+
+@media (max-width:960px){
+  .links{display:none}
+  .hub-grid{grid-template-columns:1fr;justify-items:center}
+  .side{width:100%;max-width:520px;display:grid;grid-template-columns:1fr 1fr}
+  .wall{grid-template-columns:1fr 1fr}
+  .wall .intro{grid-column:1 / -1;position:static}
+  .dgrid,.g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .final{grid-template-columns:1fr}
+  .final .phone{display:none}
+  .final .copy{padding-bottom:clamp(150px,30vw,220px)}
+}
+@media (max-width:620px){
+  .g2,.g3,.dgrid,.rules,.wall{grid-template-columns:1fr}
+  .feature{grid-template-columns:1fr}
+  .feature svg{min-height:180px}
+  .side{grid-template-columns:1fr}
+  .drone{left:2%;top:0}
+  .nav .btn{padding:10px 14px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="hillA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dbb6f"/><stop offset="1" stop-color="#4f9a54"/></linearGradient>
+    <linearGradient id="hillB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f9a54"/><stop offset="1" stop-color="#2f6f41"/></linearGradient>
+    <linearGradient id="skyS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d9bf7"/><stop offset="1" stop-color="#bfe0ff"/></linearGradient>
+    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb57a"/><stop offset="1" stop-color="#ffe2b8"/></linearGradient>
+    <linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b8cf5" stop-opacity=".45"/><stop offset="1" stop-color="#4b8cf5" stop-opacity=".04"/></linearGradient>
+    <g id="cloud"><ellipse cx="0" cy="0" rx="46" ry="20" fill="#fff"/><circle cx="-18" cy="-14" r="20" fill="#fff"/><circle cx="12" cy="-20" r="26" fill="#fff"/><circle cx="36" cy="-6" r="16" fill="#fff"/></g>
+    <g id="windmill">
+      <rect x="-3" y="0" width="6" height="120" rx="3" fill="#fff"/>
+      <g class="blade"><g fill="#fff"><rect x="-4" y="-62" width="8" height="62" rx="4"/><rect x="-4" y="-62" width="8" height="62" rx="4" transform="rotate(120)"/><rect x="-4" y="-62" width="8" height="62" rx="4" transform="rotate(240)"/></g><g fill="#ff8a3d"><rect x="-4" y="-62" width="8" height="12" rx="4"/><rect x="-4" y="-62" width="8" height="12" rx="4" transform="rotate(120)"/><rect x="-4" y="-62" width="8" height="12" rx="4" transform="rotate(240)"/></g></g>
+      <circle r="7" fill="#ff8a3d"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <nav class="nav" aria-label="Page">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#4b8cf5"/><path d="M5 20c3 0 4-10 9-10s6 10 9 10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      Distribution Valley
+    </a>
+    <span class="links"><a href="#basics">Basics</a><a href="#mean">Mean &amp; variance</a><a href="#explorer">Explorer</a><a href="#cards">Six cards</a><a href="#faq">FAQ</a></span>
+    <a class="btn dark" href="#explorer">Open explorer</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="sky" id="top">
+    <div class="hero">
+      <span class="tag">Statistical Learning · Day 1</span>
+      <h1>Distributions Made Simple, Visual &amp; Game-Ready</h1>
+      <p class="lead">Bernoulli, Binomial, Geometric, Categorical, Beta and Gaussian, with mean and variance for each. Plain English, Dota 2 examples, and a toy you can drag.</p>
+      <a class="btn cyan" href="#explorer">Play with the explorer</a>
+      <div class="hero-stage">
+        <svg class="drone" viewBox="0 0 200 120" aria-hidden="true">
+          <rect x="20" y="30" width="160" height="7" rx="3.5" fill="#6b4a3a"/>
+          <ellipse cx="30" cy="26" rx="26" ry="5" fill="#5b3d2f" opacity=".85"/><ellipse cx="170" cy="26" rx="26" ry="5" fill="#5b3d2f" opacity=".85"/>
+          <rect x="27" y="26" width="6" height="10" fill="#6b4a3a"/><rect x="167" y="26" width="6" height="10" fill="#6b4a3a"/>
+          <path d="M70 40 a30 26 0 0 1 60 0 v8 h-60z" fill="#ff8a3d"/>
+          <rect x="82" y="30" width="36" height="12" rx="5" fill="#ffe1c2"/>
+          <rect x="66" y="46" width="68" height="10" rx="5" fill="#e06d24"/>
+          <path d="M78 56 l-10 30 M122 56 l10 30" stroke="#5b3d2f" stroke-width="4" stroke-linecap="round"/>
+          <path d="M84 98 q16 8 32 0 M88 108 q12 6 24 0" stroke="#fff" stroke-width="3" fill="none" opacity=".7" stroke-linecap="round"/>
+        </svg>
+        <svg class="scene" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <use href="#cloud" transform="translate(160 90) scale(1.2)" opacity=".95"/>
+          <use href="#cloud" transform="translate(1040 70) scale(1.4)" opacity=".95"/>
+          <use href="#cloud" transform="translate(920 190) scale(.8)" opacity=".85"/>
+          <path d="M0 300 L170 170 L320 270 L470 150 L640 290 L860 150 L1040 260 L1200 190 L1200 420 L0 420Z" fill="url(#hillA)"/>
+          <path d="M470 150 L540 215 L500 300 L640 290Z M860 150 L930 210 L900 280 L1040 260Z M170 170 L230 220 L200 280 L320 270Z" fill="#3f8a4c" opacity=".55"/>
+          <path d="M0 350 C220 290 400 320 600 345 C800 370 960 300 1200 325 L1200 420 L0 420Z" fill="url(#hillB)"/>
+          <path d="M760 420 L880 340 L1200 360 L1200 420Z" fill="#f2c96b"/>
+          <g stroke="#d9a94a" stroke-width="3" opacity=".8"><line x1="800" y1="420" x2="900" y2="345"/><line x1="860" y1="420" x2="940" y2="348"/><line x1="920" y1="420" x2="985" y2="351"/><line x1="980" y1="420" x2="1030" y2="354"/><line x1="1040" y1="420" x2="1075" y2="356"/></g>
+          <use href="#windmill" transform="translate(120 230)"/>
+          <use href="#windmill" transform="translate(215 262) scale(.8)"/>
+          <g transform="translate(1040 290)"><rect x="0" y="20" width="70" height="50" fill="#d9534f"/><path d="M-6 22 L35 -6 L76 22Z" fill="#b8423f"/><rect x="24" y="38" width="22" height="32" fill="#fff"/><path d="M24 38 L46 70 M46 38 L24 70" stroke="#d9534f" stroke-width="3"/></g>
+        </svg>
+        <div class="phone" aria-label="Phone mockup of today's lesson">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+            <div class="ph-top">
+              <div class="hello"><span class="avatar">D1</span><span><small>Hi, welcome back</small><b>Today: 6 distributions</b></span></div>
+              <svg viewBox="0 0 330 170" preserveAspectRatio="xMidYMax slice" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
+                <use href="#cloud" transform="translate(250 60) scale(.6)"/>
+                <path d="M0 120 L70 70 L130 115 L200 60 L270 110 L330 80 L330 170 L0 170Z" fill="url(#hillA)"/>
+                <path d="M0 145 C90 120 180 135 330 128 L330 170 L0 170Z" fill="url(#hillB)"/>
+                <g fill="#ffd27a"><rect x="60" y="118" width="14" height="27" rx="3"/><rect x="80" y="104" width="14" height="41" rx="3"/><rect x="100" y="94" width="14" height="51" rx="3"/><rect x="120" y="106" width="14" height="39" rx="3"/><rect x="140" y="122" width="14" height="23" rx="3"/></g>
+                <use href="#windmill" transform="translate(275 95) scale(.45)"/>
+              </svg>
+            </div>
+            <div class="ph-body">
+              <div class="chips2">
+                <span class="mini"><i style="background:var(--green-pale)">🎯</i><span>Arrow hit rate<b>θ = 0.50</b></span></span>
+                <span class="mini"><i style="background:var(--peach)">⚔️</i><span>Kills / fight<b>mean 0.7</b></span></span>
+              </div>
+              <span class="qa">Quick actions</span>
+              <span class="row"><i style="background:var(--blue-pale)">📊</i><span><b>Open the explorer</b>Drag θ, n, μ, σ</span><span class="pts">+1 card</span></span>
+              <span class="row"><i style="background:var(--peach)">📝</i><span><b>Exam check</b>5 quick questions</span><span class="pts">+25 pts</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="works" aria-label="Where distributions show up in the course">
+    <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg>Beta-Binomial</span>
+    <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z" stroke="currentColor" stroke-width="2"/></svg>Naive Bayes</span>
+    <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19c3 0 4-12 8-12s5 12 8 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Gaussians</span>
+    <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 3 6 13h5l-1 8 7-10h-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Regression</span>
+    <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Markov chains</span>
+  </div>
+
+  <!-- BASICS -->
+  <section class="section" id="basics">
+    <div class="head">
+      <span class="tag center">The basics</span>
+      <h2>Three Ideas That Power Every Chapter</h2>
+      <p>Before the six distributions, three words you will see on almost every slide.</p>
+    </div>
+    <div class="grid g3">
+      <article class="pcard c-green">
+        <svg class="art" viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="url(#skyS)"/>
+          <use href="#cloud" transform="translate(240 50) scale(.7)"/>
+          <path d="M0 140 L80 90 L150 135 L230 80 L320 130 L320 200 L0 200Z" fill="url(#hillA)"/>
+          <path d="M0 170 C100 150 220 165 320 155 L320 200 L0 200Z" fill="url(#hillB)"/>
+          <g transform="translate(70 92)"><rect width="60" height="60" rx="12" fill="#fff"/><circle cx="18" cy="18" r="6" fill="#121419"/><circle cx="42" cy="42" r="6" fill="#121419"/><circle cx="30" cy="30" r="6" fill="#121419"/></g>
+          <g transform="translate(170 104)"><rect width="48" height="48" rx="10" fill="#ff8a3d"/><circle cx="14" cy="14" r="5" fill="#fff"/><circle cx="34" cy="34" r="5" fill="#fff"/></g>
+        </svg>
+        <div class="txt">
+          <h3>Random variable</h3>
+          <p>A number that depends on chance. <span class="m">X</span> = your kills in the next teamfight. Before the fight you don't know it. You only know how likely each value is.</p>
+        </div>
+      </article>
+      <article class="pcard c-blue">
+        <svg class="art" viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="url(#skyS)"/>
+          <path d="M0 175 C100 160 220 168 320 160 L320 200 L0 200Z" fill="url(#hillB)"/>
+          <g fill="#ffd27a"><rect x="40" y="120" width="26" height="50" rx="5"/><rect x="74" y="90" width="26" height="80" rx="5"/><rect x="108" y="110" width="26" height="60" rx="5"/></g>
+          <path d="M175 170 C200 170 210 80 240 80 S280 170 305 170Z" fill="#ff8a3d" opacity=".85"/>
+          <text x="86" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="#fff">bars</text>
+          <text x="240" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="#fff">a curve</text>
+        </svg>
+        <div class="txt">
+          <h3>Discrete vs continuous</h3>
+          <p><b>Discrete</b> values can be counted (0, 1, 2 kills): bars, and the bars add up to 1. <b>Continuous</b> values can be anything (your ping, 23.7 ms): a curve, and the area under it is 1.</p>
+        </div>
+      </article>
+      <article class="pcard c-peach">
+        <svg class="art" viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="url(#dusk)"/>
+          <circle cx="160" cy="120" r="56" fill="#fff6e8"/>
+          <path d="M0 160 L110 95 L170 140 L250 90 L320 140 L320 200 L0 200Z" fill="url(#hillA)"/>
+          <path d="M0 185 C100 170 220 178 320 172 L320 200 L0 200Z" fill="url(#hillB)"/>
+          <line x1="160" y1="40" x2="160" y2="185" stroke="#121419" stroke-width="3" stroke-dasharray="6 6"/>
+          <path d="M95 60 H225" stroke="#121419" stroke-width="3" stroke-linecap="round"/>
+          <path d="M95 52 v16 M225 52 v16" stroke="#121419" stroke-width="3" stroke-linecap="round"/>
+          <text x="166" y="35" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#121419">mean</text>
+          <text x="160" y="84" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#121419">spread</text>
+        </svg>
+        <div class="txt">
+          <h3>Mean and variance</h3>
+          <p><b>Mean</b>: the long-run average, the center. <b>Variance</b>: how far values usually land from the center. Consistent player: small variance. 40 kills one game, 3 the next: big variance.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- MEAN & VARIANCE -->
+  <section class="section left" id="mean">
+    <div class="head">
+      <span class="tag">How to compute them</span>
+      <h2>Mean &amp; Variance, Step by Step</h2>
+      <p>One small Dota example. Check every number with a calculator once and the formulas stop being scary.</p>
+    </div>
+    <div class="sheet">
+      <div class="grid g2">
+        <div class="formula">E[X] = Σ<sub>x</sub> x · p(x)<small>Mean: each value times its probability, then add</small></div>
+        <div class="formula">Var(X) = E[X²] − (E[X])²<small>Variance: mean of the squares minus the square of the mean</small></div>
+      </div>
+      <p>Say <span class="m">X</span> = your kills in one teamfight, and from many teamfights you know:</p>
+      <div class="wtable">
+        <table>
+          <thead><tr><th>kills x</th><th>p(x)</th><th>x · p(x)</th><th>x² · p(x)</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>0.5</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0.3</td><td>0.3</td><td>0.3</td></tr>
+            <tr><td>2</td><td>0.2</td><td>0.4</td><td>0.8</td></tr>
+            <tr><td>sum</td><td>1.0</td><td>E[X] = 0.7</td><td>E[X²] = 1.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><p>Check the probabilities add up to 1: 0.5 + 0.3 + 0.2 = 1. ✓</p></div>
+        <div class="step"><span class="n">2</span><p>Mean: <span class="m">0·0.5 + 1·0.3 + 2·0.2 = 0.7</span> kills per teamfight. You never get exactly 0.7 kills, but that is the average over many fights.</p></div>
+        <div class="step"><span class="n">3</span><p>Variance: <span class="m">E[X²] − 0.7² = 1.1 − 0.49 = 0.61</span>. The standard deviation is <span class="m">√0.61 ≈ 0.78</span>, in the same units as X (kills).</p></div>
+        <div class="step"><span class="n">4</span><p>Continuous version: replace the sum with an integral, <span class="m">E[X] = ∫ x p(x) dx</span>. Same idea, area instead of bars.</p></div>
+      </div>
+      <h3>Two rules worth remembering</h3>
+      <div class="rules">
+        <div class="rule"><span class="m">E[aX + b] = a·E[X] + b</span><span>Double every kill and add 1: the mean doubles and goes up by 1.</span></div>
+        <div class="rule"><span class="m">Var(aX + b) = a²·Var(X)</span><span>Adding b moves the center but not the spread. Multiplying by a scales the spread by a².</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLORER -->
+  <section class="sky" id="explorer">
+    <div class="hub">
+      <span class="tag">Explorer</span>
+      <h2>Your Distribution Knowledge Hub</h2>
+      <p class="lead">Pick a distribution, drag the sliders, and watch the shape, the mean (orange line) and the variance change.</p>
+      <div class="hub-grid">
+        <div class="side">
+          <div class="scard"><span class="k">Mean</span><span class="v" id="mVal">0.50</span><div class="track"><i id="mBar"></i></div><span class="pill-s" id="mNote">center of the shape</span></div>
+          <div class="scard"><span class="k">Variance</span><span class="v" id="vVal">0.25</span><div class="track blue"><i id="vBar"></i></div><span class="pill-s b" id="vNote">sd 0.50</span></div>
+        </div>
+        <div class="phone xphone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+            <div class="tabs" role="tablist" aria-label="Distributions" id="tabs"></div>
+            <div class="xbody">
+              <div class="xtitle"><b id="xName">Bernoulli</b><span id="xKind">discrete</span></div>
+              <div class="xformula" id="xFormula"></div>
+              <svg id="chart" viewBox="0 0 340 200" role="img" aria-label="Chart of the selected distribution"></svg>
+              <div class="sliders" id="sliders"></div>
+            </div>
+          </div>
+        </div>
+        <div class="side">
+          <div class="scard"><span class="pill-s g">Game example</span><p id="xGame"></p></div>
+          <div class="scard"><span class="pill-s">Exam note</span><p id="xExam"></p></div>
+        </div>
+      </div>
+    </div>
+    <svg class="scene" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <use href="#cloud" transform="translate(120 70)"/>
+      <use href="#cloud" transform="translate(1080 110) scale(1.2)"/>
+      <path d="M0 200 L150 110 L300 190 L520 120 L700 210 L900 100 L1080 190 L1200 140 L1200 300 L0 300Z" fill="url(#hillA)"/>
+      <path d="M0 250 C250 210 450 240 650 255 C850 270 1000 220 1200 240 L1200 300 L0 300Z" fill="url(#hillB)"/>
+      <g transform="translate(980 175)"><path d="M0 70 L0 25 L40 0 L80 25 L80 70Z" fill="#cdeee0" stroke="#7cc3a0" stroke-width="3"/><path d="M20 70 V20 M40 70 V8 M60 70 V20 M0 45 H80" stroke="#7cc3a0" stroke-width="3"/></g>
+    </svg>
+  </section>
+
+  <!-- SIX CARDS -->
+  <section class="section left" id="cards">
+    <div class="head">
+      <span class="tag">Today's homework</span>
+      <h2>Your Six Distributions, Connected</h2>
+      <p>Tap a card to load it into the explorer. Then copy each one onto a paper card.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter cards">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="discrete" aria-pressed="false">Discrete</button>
+      <button type="button" data-f="continuous" aria-pressed="false">Continuous</button>
+    </div>
+    <article class="feature">
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="400" height="300" fill="url(#skyS)"/>
+        <use href="#cloud" transform="translate(300 60) scale(.8)"/>
+        <path d="M0 190 L90 120 L170 180 L260 110 L400 180 L400 300 L0 300Z" fill="url(#hillA)"/>
+        <path d="M0 230 C120 205 260 225 400 215 L400 300 L0 300Z" fill="url(#hillB)"/>
+        <path d="M180 300 L230 225 L400 235 L400 300Z" fill="#f2c96b"/>
+        <use href="#windmill" transform="translate(70 150) scale(.7)"/>
+        <g transform="translate(150 70) rotate(-6)"><rect width="120" height="150" rx="10" fill="#fff"/><rect x="14" y="16" width="70" height="10" rx="5" fill="#121419"/><rect x="14" y="38" width="92" height="7" rx="3.5" fill="#d7dce5"/><rect x="14" y="54" width="80" height="7" rx="3.5" fill="#d7dce5"/><rect x="14" y="70" width="88" height="7" rx="3.5" fill="#d7dce5"/><path d="M18 130 C35 130 40 92 60 92 S85 130 102 130" stroke="#4b8cf5" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+      </svg>
+      <div class="txt">
+        <span class="kind">Template</span>
+        <h3>How to make one distribution card</h3>
+        <p>For each of the six, write on one small card:</p>
+        <ol>
+          <li>Name and parameters, e.g. <span class="m">Binomial(n, θ)</span></li>
+          <li>The formula for p(x)</li>
+          <li>Support: which values x can take</li>
+          <li>Mean and variance</li>
+          <li>One game example in your own words</li>
+          <li>Where it appears in the course</li>
+        </ol>
+        <div class="meta"><span>35 min</span><span>6 cards</span><span>Day 1 · step 2</span></div>
+      </div>
+    </article>
+    <div class="dgrid" id="dgrid"></div>
+  </section>
+
+  <!-- EXAM WALL -->
+  <section class="section" aria-label="Distributions on past exams">
+    <div class="wall">
+      <div class="intro">
+        <span class="tag">Real tasks from past exams</span>
+        <h2>What the Exams Say About Distributions</h2>
+        <p style="color:var(--ink-2)">Distributions are not a separate exam topic. They hide inside almost every task. Stars show how hard the task feels on Day 1.</p>
+        <a class="btn dark" href="#faq">See common questions</a>
+      </div>
+      <div class="col">
+        <div class="quote q-peach"><p>A geometric distribution <span class="m">p(k | q) = (1 − q)<sup>k</sup> q</span> for how many people one infected person passes it on to. Then put a Beta prior on q.</p><div class="who"><i>25</i><span><b>2025 Final, Task 3</b>Geometric + Beta</span><span class="stars">3.5</span></div></div>
+        <div class="quote q-blue"><p>“Give the formula for the density of the multivariate Gaussian.” A pure memory question. Free points if your Gaussian card is ready.</p><div class="who"><i>25</i><span><b>2025 Final, Task 1(b)</b>Gaussian</span><span class="stars">2.0</span></div></div>
+        <div class="quote q-green"><p>Features that are independent and Bernoulli distributed: which fast classifier fits? The answer is Naive Bayes, with one Bernoulli per feature.</p><div class="who"><i>25</i><span><b>2025 Final, Task 1(c)</b>Bernoulli</span><span class="stars">1.5</span></div></div>
+      </div>
+      <div class="col">
+        <div class="quote q-green"><p>Drinks before going home: <span class="m">p(y | λ) = λ(1 − λ)<sup>y−1</sup></span>, y = 1, 2, … This geometric counts <i>tries</i>, not failures. Same family, shifted support.</p><div class="who"><i>26</i><span><b>2026 Final, Task 2</b>Geometric, version 2</span><span class="stars">3.0</span></div></div>
+        <div class="quote q-peach"><p>Draw a density with a spike at 0 and a flat slab: a mix of a very narrow and a very wide Gaussian, picked by a Bernoulli coin.</p><div class="who"><i>26</i><span><b>2026 Final, Task 1(c)</b>Spike-and-slab</span><span class="stars">4.0</span></div></div>
+        <div class="quote q-blue"><p>The formula sheet gives the Beta mean <span class="m">a/(a + b)</span> and the Gamma density. Know what they mean, not only where they are.</p><div class="who"><i>26</i><span><b>2026 Final, formula sheet</b>Beta, Gamma</span><span class="stars">1.0</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-wrap" id="faq">
+    <div class="section">
+      <div class="head">
+        <span class="tag center">FAQ</span>
+        <h2>Common Questions About Distributions</h2>
+        <p>The things beginners get stuck on. Open one at a time.</p>
+      </div>
+      <div class="faq">
+        <details open><summary>What is the difference between p(x) for discrete and continuous variables?</summary><div class="a"><p>Discrete: <span class="m">p(x)</span> is a real probability, like p(2 kills) = 0.2. Continuous: <span class="m">p(x)</span> is a <b>density</b>. You only get a probability from an area: <span class="m">P(a ≤ X ≤ b) = ∫<sub>a</sub><sup>b</sup> p(x) dx</span>.</p></div></details>
+        <details><summary>Can a density be bigger than 1?</summary><div class="a"><p>Yes. A uniform distribution on [0, 0.5] has height 2, because the total area must be 1: width 0.5 × height 2 = 1. Only areas must stay at most 1.</p></div></details>
+        <details><summary>What is the probability that a continuous X equals one exact value?</summary><div class="a"><p>Zero. A single point has no width, so no area. P(ping = exactly 23.700000 ms) = 0, but P(ping between 23 and 24 ms) can be large.</p></div></details>
+        <details><summary>Which version of the geometric distribution should I use?</summary><div class="a"><p>Read the support. <b>Failures before success</b> (k = 0, 1, 2, …): <span class="m">(1 − q)<sup>k</sup> q</span>, mean <span class="m">(1 − q)/q</span>. <b>Tries until success</b> (y = 1, 2, …): <span class="m">λ(1 − λ)<sup>y−1</sup></span>, mean <span class="m">1/λ</span>. Both appeared on finals.</p></div></details>
+        <details><summary>Why does the Beta distribution matter so much?</summary><div class="a"><p>It is a distribution over a probability θ between 0 and 1, so it can describe your belief about an arrow hit rate. With Bernoulli, Binomial or Geometric data, a Beta prior gives a Beta posterior. That is tomorrow's and the day after tomorrow's topic.</p></div></details>
+        <details><summary>Why is there no mean for the Categorical distribution?</summary><div class="a"><p>Its outcomes are labels (carry, mid, offlane…), not numbers. The average of “mid” and “carry” makes no sense. You can still talk about the most likely label and each probability.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECK -->
+  <section class="section" id="check">
+    <div class="head">
+      <span class="tag center">Check yourself</span>
+      <h2>Five Quick Questions</h2>
+      <p>Paper first, then open. Use the explorer to verify.</p>
+    </div>
+    <div class="faq">
+      <details><summary>1. Bernoulli(0.3): mean and variance?</summary><div class="a"><p>Mean <span class="m">θ = 0.3</span>. Variance <span class="m">θ(1 − θ) = 0.3 · 0.7 = 0.21</span>.</p></div></details>
+      <details><summary>2. 10 Mirana arrows, hit rate 0.4. Expected hits and variance?</summary><div class="a"><p>Binomial(10, 0.4): mean <span class="m">nθ = 4</span>, variance <span class="m">nθ(1 − θ) = 10 · 0.4 · 0.6 = 2.4</span>.</p></div></details>
+      <details><summary>3. You win each game with probability 0.2. Expected games lost before the first win?</summary><div class="a"><p>Geometric, failures version: <span class="m">(1 − q)/q = 0.8/0.2 = 4</span> games.</p></div></details>
+      <details><summary>4. Your belief about an arrow hit rate is Beta(2, 8). What is its mean?</summary><div class="a"><p><span class="m">a/(a + b) = 2/10 = 0.2</span>. You expect a 20% hit rate.</p></div></details>
+      <details><summary>5. X has mean 0.7 and variance 0.61. What are the mean and variance of 2X + 1?</summary><div class="a"><p>Mean <span class="m">2 · 0.7 + 1 = 2.4</span>. Variance <span class="m">2² · 0.61 = 2.44</span>. The “+1” does not change the spread.</p></div></details>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="sky" aria-label="Finish">
+    <div class="final">
+      <div class="copy">
+        <span class="tag">Day 1 · done when</span>
+        <h2>Your Six Cards, Ready Instantly</h2>
+        <p>Finish today's plan: slides pp. 16–25, six paper cards, the past-exam questions, and four densities from memory.</p>
+        <div class="ctas">
+          <a class="btn dark" href="#cards">Back to the cards</a>
+          <a class="btn white" href="https://stellasdeutsch-dev.github.io/bayes-from-zero/">Review Bayes From Zero</a>
+        </div>
+      </div>
+      <div class="phone" aria-hidden="true">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+          <div class="done">
+            <span class="kind">Day 1</span>
+            <b>Welcome to tomorrow: Maximum likelihood</b>
+            <div class="checklist"><span>6 distribution cards</span><span>Mean &amp; variance by hand</span><span>Past-exam questions</span><span>4 densities from memory</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg class="scene" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <use href="#cloud" transform="translate(700 60) scale(1.1)"/>
+      <path d="M0 170 L160 90 L320 160 L480 100 L640 180 L1200 150 L1200 260 L0 260Z" fill="url(#hillA)"/>
+      <path d="M0 215 C260 180 520 210 760 220 C960 228 1080 200 1200 205 L1200 260 L0 260Z" fill="url(#hillB)"/>
+      <g transform="translate(360 150)"><rect x="0" y="22" width="90" height="62" fill="#d9534f"/><path d="M-8 24 L45 -10 L98 24Z" fill="#b8423f"/><rect x="30" y="44" width="30" height="40" fill="#fff"/><path d="M30 44 L60 84 M60 44 L30 84" stroke="#d9534f" stroke-width="3"/></g>
+      <use href="#windmill" transform="translate(90 120) scale(.8)"/>
+    </svg>
+  </section>
+
+  <footer>Distribution Valley · Statistical Learning, Day 1 · made for one student's exam prep</footer>
+</div>
+
+<script>
+(function(){
+  // ---------- math helpers ----------
+  const LG=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  function lgamma(z){
+    if(z<0.5) return Math.log(Math.PI/Math.sin(Math.PI*z))-lgamma(1-z);
+    z-=1; let x=LG[0]; for(let i=1;i<9;i++) x+=LG[i]/(z+i);
+    const t=z+7.5; return 0.5*Math.log(2*Math.PI)+(z+0.5)*Math.log(t)-t+Math.log(x);
+  }
+  const lchoose=(n,k)=>lgamma(n+1)-lgamma(k+1)-lgamma(n-k+1);
+  const fmt=(x,d=2)=>Number.isFinite(x)?(Math.abs(x)>=100?x.toFixed(0):x.toFixed(d)):"—";
+  const range=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
+
+  // ---------- distributions ----------
+  const ROLES=["carry","mid","offlane","soft sup","hard sup"];
+  const D={
+    bern:{name:"Bernoulli",kind:"discrete",short:"one yes/no",
+      params:[{k:"t",label:"θ, Mirana arrow hit rate",min:0,max:1,step:.05,v:.5}],
+      formula:()=>"p(x) = θ<sup>x</sup>(1 − θ)<sup>1−x</sup>,  x ∈ {0, 1}",
+      xs:()=>[0,1], p:(x,P)=>x?P.t:1-P.t, labels:["miss 0","hit 1"],
+      mean:P=>P.t, vari:P=>P.t*(1-P.t), lo:()=>0, hi:()=>1,
+      game:"One Mirana arrow: hit (1) or miss (0). θ is the chance that this arrow hits.",
+      exam:"Naive Bayes with yes/no features uses one Bernoulli per feature (2025 Final 1(c)).",
+      card:"One yes/no outcome. The building block of everything else today.", sup:"{0, 1}", m:"θ", v:"θ(1−θ)"},
+    bin:{name:"Binomial",kind:"discrete",short:"count of yes",
+      params:[{k:"n",label:"n, arrows shot",min:1,max:30,step:1,v:10},{k:"t",label:"θ, hit rate",min:0,max:1,step:.05,v:.5}],
+      formula:()=>"p(k) = C(n, k) θ<sup>k</sup>(1 − θ)<sup>n−k</sup>",
+      xs:P=>range(0,P.n), p:(k,P)=>{if(P.t===0)return k===0?1:0; if(P.t===1)return k===P.n?1:0; return Math.exp(lchoose(P.n,k)+k*Math.log(P.t)+(P.n-k)*Math.log(1-P.t))},
+      mean:P=>P.n*P.t, vari:P=>P.n*P.t*(1-P.t), lo:()=>0, hi:P=>P.n,
+      game:"Hits from your next n Mirana arrows, when every arrow hits with chance θ, independently.",
+      exam:"This is the likelihood in the Beta-Binomial model: k successes in n tries.",
+      card:"How many yes in n independent tries.", sup:"0, 1, …, n", m:"nθ", v:"nθ(1−θ)"},
+    geo:{name:"Geometric",kind:"discrete",short:"wait for success",
+      params:[{k:"q",label:"q, chance to win a game",min:.05,max:.9,step:.05,v:.3}],
+      formula:()=>"p(k) = (1 − q)<sup>k</sup> q,  k = 0, 1, 2, …",
+      xs:P=>{let K=0,c=0;while(c<.995&&K<40){c+=Math.pow(1-P.q,K)*P.q;K++}return range(0,Math.max(K,4))},
+      p:(k,P)=>Math.pow(1-P.q,k)*P.q,
+      mean:P=>(1-P.q)/P.q, vari:P=>(1-P.q)/(P.q*P.q), lo:()=>0, hi:P=>D.geo.xs(P).length-1,
+      game:"Games you lose before your first win of the day, when you win each game with chance q. Same idea: arrows missed before the first hit.",
+      exam:"On both finals. 2025 counts failures (k = 0, 1, …). 2026 counts tries (y = 1, 2, …, mean 1/λ). Read the support!",
+      card:"Failures before the first success.", sup:"0, 1, 2, …", m:"(1−q)/q", v:"(1−q)/q²"},
+    cat:{name:"Categorical",kind:"discrete",short:"K-sided die",
+      params:[{k:"b",label:"how predictable the enemy is",min:0,max:1,step:.05,v:.4}],
+      formula:()=>"p(x = k) = π<sub>k</sub>,  π<sub>1</sub> + … + π<sub>K</sub> = 1",
+      xs:()=>[0,1,2,3,4], p:(k,P)=>{const w=[1+5*P.b,1+1.5*P.b,1,1-.4*P.b,1-.6*P.b];const s=w.reduce((a,b)=>a+b,0);return w[k]/s},
+      labels:ROLES, mean:()=>NaN, vari:()=>NaN, lo:()=>0, hi:()=>4,
+      game:"Which role the enemy drafts first in Dota. Slide right: they almost always first-pick a carry.",
+      exam:"Behind the Dirichlet-multinomial model and bag of words (2025 Final 6).",
+      card:"One of K labels, each with its own probability.", sup:"K labels", m:"none (labels)", v:"none"},
+    beta:{name:"Beta",kind:"continuous",short:"belief about a rate",
+      params:[{k:"a",label:"a, think: arrows that hit",min:.5,max:20,step:.5,v:3},{k:"b",label:"b, think: arrows that missed",min:.5,max:20,step:.5,v:3}],
+      formula:()=>"p(θ) = θ<sup>a−1</sup>(1 − θ)<sup>b−1</sup> / B(a, b),  0 < θ < 1",
+      lo:()=>0, hi:()=>1,
+      pdf:(x,P)=>{if(x<=0||x>=1)return 0;const lB=lgamma(P.a)+lgamma(P.b)-lgamma(P.a+P.b);return Math.exp((P.a-1)*Math.log(x)+(P.b-1)*Math.log(1-x)-lB)},
+      mean:P=>P.a/(P.a+P.b), vari:P=>P.a*P.b/((P.a+P.b)**2*(P.a+P.b+1)),
+      game:"Your belief about a new Mirana player's arrow hit rate. More hits seen → bigger a → the curve moves right and gets narrower.",
+      exam:"The conjugate prior for Bernoulli, Binomial and Geometric. The mean a/(a+b) is on the formula sheet.",
+      card:"A distribution for a probability itself.", sup:"0 < θ < 1", m:"a/(a+b)", v:"ab/((a+b)²(a+b+1))"},
+    gau:{name:"Gaussian",kind:"continuous",short:"the bell curve",
+      params:[{k:"mu",label:"μ, typical last hits at 10 min",min:20,max:100,step:1,v:60},{k:"s",label:"σ, how much games differ",min:3,max:25,step:1,v:10}],
+      formula:()=>"p(x) = (1/√(2πσ²)) · exp(−(x − μ)² / 2σ²)",
+      lo:()=>0, hi:()=>120,
+      pdf:(x,P)=>Math.exp(-((x-P.mu)**2)/(2*P.s*P.s))/Math.sqrt(2*Math.PI*P.s*P.s),
+      mean:P=>P.mu, vari:P=>P.s*P.s,
+      game:"Last hits at 10 minutes for a Dota mid player across many games. μ is the typical game, σ how much games differ.",
+      exam:"Everywhere later: Gaussian classifiers, Bayesian regression, spike-and-slab (2026 Final 1(c)).",
+      card:"The bell curve: center μ, width σ.", sup:"all real numbers", m:"μ", v:"σ²"}
+  };
+  const ORDER=["bern","bin","geo","cat","beta","gau"];
+  const state={}; ORDER.forEach(id=>{state[id]={};D[id].params.forEach(p=>state[id][p.k]=p.v)});
+  let cur="bern";
+
+  // ---------- UI ----------
+  const tabs=document.getElementById("tabs"), sliders=document.getElementById("sliders"), chart=document.getElementById("chart");
+  tabs.innerHTML=ORDER.map(id=>`<button type="button" role="tab" id="tab-${id}" aria-selected="${id===cur}" data-id="${id}">${D[id].name}</button>`).join("");
+  tabs.addEventListener("click",e=>{const b=e.target.closest("button");if(b)select(b.dataset.id)});
+
+  function select(id){
+    cur=id;
+    tabs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",b.dataset.id===id));
+    const d=D[id];
+    document.getElementById("xName").textContent=d.name;
+    document.getElementById("xKind").textContent=d.kind+" · "+d.short;
+    document.getElementById("xFormula").innerHTML=d.formula();
+    document.getElementById("xGame").textContent=d.game;
+    document.getElementById("xExam").textContent=d.exam;
+    sliders.innerHTML=d.params.map(p=>`<div class="sl"><label for="s-${p.k}">${p.label}</label><output id="o-${p.k}">${state[id][p.k]}</output><input type="range" id="s-${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${state[id][p.k]}" data-k="${p.k}"></div>`).join("");
+    sliders.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",()=>{state[cur][inp.dataset.k]=parseFloat(inp.value);document.getElementById("o-"+inp.dataset.k).textContent=inp.value;draw()}));
+    const t=document.getElementById("tab-"+id); if(t) tabs.scrollLeft=Math.max(0,t.offsetLeft-tabs.offsetLeft-14);
+    draw();
+  }
+
+  const W=340,H=200,L=34,R=12,T=16,B=34,PW=W-L-R,PH=H-T-B;
+  function txt(x,y,s,anchor="middle",fill="#596071",size=10.5,weight=500){return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Instrument Sans, sans-serif" font-size="${size}" font-weight="${weight}" fill="${fill}">${s}</text>`}
+  function draw(){
+    const d=D[cur],P=state[cur];
+    let s=`<line x1="${L}" y1="${T+PH}" x2="${W-R}" y2="${T+PH}" stroke="#c9d0dc"/>`;
+    const mean=d.mean(P), vari=d.vari(P);
+    let meanX=null, ymax;
+    if(d.kind==="discrete"){
+      const xs=d.xs(P), ys=xs.map(x=>d.p(x,P));
+      ymax=Math.max(...ys)*1.15||1;
+      const step=PW/xs.length, bw=Math.max(2,step*.68);
+      [0,.5,1].forEach(f=>{const y=T+PH-PH*f;s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#eef1f6"/>`+txt(L-6,y+3.5,(ymax*f).toFixed(2),"end")});
+      xs.forEach((x,i)=>{
+        const h=ys[i]/ymax*PH, X=L+i*step+(step-bw)/2;
+        s+=`<rect x="${X.toFixed(1)}" y="${(T+PH-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h,0).toFixed(1)}" rx="${Math.min(4,bw/3).toFixed(1)}" fill="#f2c96b" stroke="#d9a94a" stroke-width=".8"/>`;
+        const every=xs.length>16?5:(xs.length>10?2:1);
+        if(d.labels) s+=txt(L+i*step+step/2,T+PH+14,d.labels[i],"middle","#596071",xs.length>4?9:10.5);
+        else if(i%every===0) s+=txt(L+i*step+step/2,T+PH+14,x);
+      });
+      if(cur==="geo") s+=txt(W-R,T+PH+28,"tail continues →","end","#596071",9.5);
+      if(Number.isFinite(mean)) meanX=L+(mean-xs[0]+.5)*step;
+    }else{
+      const lo=d.lo(P),hi=d.hi(P),N=220,pts=[];
+      for(let i=0;i<=N;i++){const x=lo+(hi-lo)*(i/N);pts.push([x,d.pdf(x,P)])}
+      const finite=pts.map(p=>p[1]).filter(Number.isFinite);
+      ymax=Math.min(Math.max(...finite)*1.12, cur==="beta"?8:Infinity)||1;
+      [0,.5,1].forEach(f=>{const y=T+PH-PH*f;s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#eef1f6"/>`+txt(L-6,y+3.5,(ymax*f).toFixed(ymax<1?3:2),"end")});
+      const X=x=>L+(x-lo)/(hi-lo)*PW, Y=y=>T+PH-Math.min(y,ymax)/ymax*PH;
+      const line=pts.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)).join(" ");
+      s+=`<path d="${line} L${X(hi)} ${T+PH} L${X(lo)} ${T+PH}Z" fill="url(#areaG)"/><path d="${line}" fill="none" stroke="#4b8cf5" stroke-width="2.6" stroke-linejoin="round"/>`;
+      const ticks=cur==="beta"?[0,.25,.5,.75,1]:[0,20,40,60,80,100,120];
+      ticks.forEach(t=>s+=txt(X(t),T+PH+14,t));
+      meanX=X(mean);
+    }
+    if(meanX!==null){
+      s+=`<line x1="${meanX.toFixed(1)}" y1="${T-2}" x2="${meanX.toFixed(1)}" y2="${T+PH}" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="5 4"/>`;
+      const anchor=meanX>W-60?"end":(meanX<L+30?"start":"middle");
+      s+=txt(meanX+(anchor==="end"?-4:anchor==="start"?4:0),T+8,"mean "+fmt(mean),anchor,"#c25d14",10.5,700);
+    }
+    chart.innerHTML=s;
+    chart.setAttribute("aria-label",`${d.name} distribution. Mean ${fmt(mean)}, variance ${fmt(vari)}.`);
+    // side cards
+    const lo=d.lo(P),hi=d.hi(P);
+    document.getElementById("mVal").innerHTML=Number.isFinite(mean)?fmt(mean):"—";
+    document.getElementById("vVal").innerHTML=Number.isFinite(vari)?fmt(vari,vari<.1?3:2):"—";
+    document.getElementById("mBar").style.width=Number.isFinite(mean)?Math.max(2,Math.min(100,(mean-lo)/(hi-lo)*100))+"%":"0%";
+    document.getElementById("vBar").style.width=Number.isFinite(vari)?Math.max(2,Math.min(100,Math.sqrt(vari)/((hi-lo)/2)*100))+"%":"0%";
+    document.getElementById("mNote").textContent=Number.isFinite(mean)?"formula: "+d.m:"labels have no mean";
+    document.getElementById("vNote").textContent=Number.isFinite(vari)?"sd "+fmt(Math.sqrt(vari))+" · formula: "+d.v:"look at the bars instead";
+  }
+
+  // ---------- cards ----------
+  const ART={
+    bern:'<rect width="320" height="180" fill="url(#skyS)"/><path d="M0 130 C90 110 220 125 320 115 L320 180 L0 180Z" fill="url(#hillB)"/><circle cx="110" cy="85" r="34" fill="#fff"/><circle cx="110" cy="85" r="22" fill="none" stroke="#ff8a3d" stroke-width="5"/><circle cx="110" cy="85" r="5" fill="#ff8a3d"/><circle cx="215" cy="85" r="34" fill="#fff" opacity=".9"/><path d="M200 85 h30 M215 70 v30" stroke="#121419" stroke-width="5" stroke-linecap="round"/>',
+    bin:'<rect width="320" height="180" fill="url(#skyS)"/><path d="M0 150 C90 135 220 145 320 138 L320 180 L0 180Z" fill="url(#hillB)"/><g fill="#f2c96b" stroke="#d9a94a"><rect x="60" y="120" width="24" height="25" rx="4"/><rect x="92" y="96" width="24" height="49" rx="4"/><rect x="124" y="66" width="24" height="79" rx="4"/><rect x="156" y="56" width="24" height="89" rx="4"/><rect x="188" y="70" width="24" height="75" rx="4"/><rect x="220" y="100" width="24" height="45" rx="4"/><rect x="252" y="124" width="24" height="21" rx="4"/></g>',
+    geo:'<rect width="320" height="180" fill="url(#dusk)"/><path d="M0 150 C90 135 220 145 320 138 L320 180 L0 180Z" fill="url(#hillB)"/><g fill="#4b8cf5"><rect x="50" y="50" width="30" height="95" rx="5"/><rect x="88" y="78" width="30" height="67" rx="5"/><rect x="126" y="98" width="30" height="47" rx="5"/><rect x="164" y="112" width="30" height="33" rx="5"/><rect x="202" y="122" width="30" height="23" rx="5"/><rect x="240" y="129" width="30" height="16" rx="5"/></g>',
+    cat:'<rect width="320" height="180" fill="url(#skyS)"/><path d="M0 150 C90 135 220 145 320 138 L320 180 L0 180Z" fill="url(#hillB)"/><g><rect x="50" y="56" width="36" height="89" rx="6" fill="#ff8a3d"/><rect x="98" y="92" width="36" height="53" rx="6" fill="#8fe3f3"/><rect x="146" y="104" width="36" height="41" rx="6" fill="#f2c96b"/><rect x="194" y="114" width="36" height="31" rx="6" fill="#8cc56a"/><rect x="242" y="120" width="36" height="25" rx="6" fill="#fff"/></g>',
+    beta:'<rect width="320" height="180" fill="url(#skyS)"/><use href="#cloud" transform="translate(255 45) scale(.6)"/><path d="M20 150 C90 150 110 50 160 50 S240 150 300 150Z" fill="url(#hillA)"/><path d="M0 155 C90 145 220 152 320 148 L320 180 L0 180Z" fill="url(#hillB)"/><line x1="160" y1="40" x2="160" y2="150" stroke="#ff8a3d" stroke-width="3" stroke-dasharray="6 5"/>',
+    gau:'<rect width="320" height="180" fill="url(#dusk)"/><circle cx="160" cy="88" r="40" fill="#fff6e8"/><path d="M10 152 C90 152 110 40 160 40 S230 152 310 152Z" fill="#4f9a54"/><path d="M160 40 L200 95 L180 152 L310 152 C230 152 210 40 160 40Z" fill="#2f6f41" opacity=".45"/><path d="M0 160 C90 152 220 158 320 155 L320 180 L0 180Z" fill="url(#hillB)"/>'
+  };
+  const grid=document.getElementById("dgrid");
+  grid.innerHTML=ORDER.map(id=>{const d=D[id];return `<button type="button" class="dcard" data-id="${id}" data-kind="${d.kind}">
+    <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[id]}</svg>
+    <span class="txt"><span class="kind ${d.kind==="continuous"?"cont":""}">${d.kind}</span><h3>${d.name}</h3><p>${d.card}</p>
+    <span class="meta"><span>support: ${d.sup}</span><span>mean: ${d.m}</span><span>var: ${d.v}</span></span></span></button>`}).join("");
+  grid.addEventListener("click",e=>{const c=e.target.closest(".dcard");if(!c)return;select(c.dataset.id);document.getElementById("explorer").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})});
+  document.querySelectorAll(".filters button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    const f=b.dataset.f; grid.querySelectorAll(".dcard").forEach(c=>c.hidden=!(f==="all"||c.dataset.kind===f));
+  }));
+
+  select("bern");
+})();
+</script>
+</body>
+</html>
