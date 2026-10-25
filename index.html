@@ -219,6 +219,22 @@ details .a{margin-top:10px;font-size:15.5px;color:#3c4251;display:flex;flex-dire
 .checklist span{display:flex;gap:8px;align-items:center}
 .checklist span::before{content:"✓";width:20px;height:20px;border-radius:50%;background:var(--green-pale);color:var(--green-dark);display:grid;place-items:center;font-size:11px;font-weight:700}
 footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
+/* practice */
+.probs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.prob{display:flex;flex-direction:column;gap:12px;min-width:0}
+.prob-top{display:flex;align-items:center;gap:10px}
+.prob-n{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;flex-shrink:0}
+.lvl{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
+.steps-l{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.prob .m{white-space:normal}
+@media (max-width:900px){.probs{grid-template-columns:1fr}}
+.prob{background:var(--white);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(18px,3vw,26px);box-shadow:0 8px 24px rgba(30,60,120,.05)}
+.prob p{font-size:15.5px;color:#3c4251}
+.prob-n{background:var(--sky);color:var(--white)}
+.lvl{background:var(--paper);border:1px solid var(--line)}
+.lvl-easy{color:var(--green-dark)}.lvl-med{color:#2856b8}.lvl-exam{color:#b55a14}.lvl-hard{color:#8a3fb8}
+.prob details{background:var(--paper);padding:13px 16px}
+.prob summary{font-size:15px}
 
 @media (max-width:960px){
   .links{display:none}
@@ -266,7 +282,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#4b8cf5"/><path d="M5 20c3 0 4-10 9-10s6 10 9 10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
       Distribution Valley
     </a>
-    <span class="links"><a href="#basics">Basics</a><a href="#mean">Mean &amp; variance</a><a href="#explorer">Explorer</a><a href="#cards">Six cards</a><a href="#faq">FAQ</a></span>
+    <span class="links"><a href="#basics">Basics</a><a href="#mean">Mean &amp; variance</a><a href="#explorer">Explorer</a><a href="#cards">Six cards</a><a href="#faq">FAQ</a><a href="#practice">Practice</a></span>
     <a class="btn dark" href="#explorer">Open explorer</a>
   </nav>
 
@@ -563,6 +579,66 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <details><summary>3. You win each game with probability 0.2. Expected games lost before the first win?</summary><div class="a"><p>Geometric, failures version: <span class="m">(1 − q)/q = 0.8/0.2 = 4</span> games.</p></div></details>
       <details><summary>4. Your belief about an arrow hit rate is Beta(2, 8). What is its mean?</summary><div class="a"><p><span class="m">a/(a + b) = 2/10 = 0.2</span>. You expect a 20% hit rate.</p></div></details>
       <details><summary>5. X has mean 0.7 and variance 0.61. What are the mean and variance of 2X + 1?</summary><div class="a"><p>Mean <span class="m">2 · 0.7 + 1 = 2.4</span>. Variance <span class="m">2² · 0.61 = 2.44</span>. The “+1” does not change the spread.</p></div></details>
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="section left" id="practice">
+    <div class="head">
+      <span class="tag">Practice · 30–40 min</span>
+      <h2>Practice Problems for Today</h2>
+      <p>Seven Dota tasks, from warm-up to exam-style. Solve on paper first, then open the hint or the solution.</p>
+    </div>
+    <div class="probs">
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">1</span><span class="lvl lvl-easy">Easy</span></div>
+        <h3>Kills in a teamfight</h3>
+        <p>Your kills <span class="m">X</span> in one teamfight: <span class="m">p(0) = 0.4</span>, <span class="m">p(1) = 0.35</span>, <span class="m">p(2) = 0.2</span>, <span class="m">p(3) = 0.05</span>. Find <span class="m">E[X]</span>, <span class="m">Var(X)</span> and the standard deviation.</p>
+        <details><summary>Hint</summary><div class="a"><p>Make the table from the “Mean &amp; variance” section: columns x·p(x) and x²·p(x).</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li><span class="m">E[X] = 0 + 0.35 + 0.4 + 0.15 = 0.9</span></li><li><span class="m">E[X²] = 0 + 0.35 + 0.8 + 0.45 = 1.6</span></li><li><span class="m">Var(X) = 1.6 − 0.81 = 0.79</span>, sd <span class="m">≈ 0.89</span></li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">2</span><span class="lvl lvl-easy">Easy</span></div>
+        <h3>Gold from a fight</h3>
+        <p>In a made-up patch, each kill gives 200 gold and every fight gives 100 gold extra: <span class="m">G = 200X + 100</span>, with X from Problem 1. Find <span class="m">E[G]</span> and <span class="m">Var(G)</span>.</p>
+        <details><summary>Hint</summary><div class="a"><p>Use the two rules: <span class="m">E[aX + b] = aE[X] + b</span> and <span class="m">Var(aX + b) = a²Var(X)</span>.</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li><span class="m">E[G] = 200·0.9 + 100 = 280</span> gold</li><li><span class="m">Var(G) = 200²·0.79 = 31,600</span>, sd <span class="m">≈ 178</span> gold. The +100 does not change the spread.</li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">3</span><span class="lvl lvl-med">Medium</span></div>
+        <h3>Twelve Mirana arrows</h3>
+        <p>Mirana shoots 12 arrows, each hits with probability 0.25, independently. (a) Which distribution? Mean and variance? (b) <span class="m">P(no hits)</span>? (c) <span class="m">P(exactly 1 hit)</span>?</p>
+        <details><summary>Hint</summary><div class="a"><p>Binomial: <span class="m">p(k) = C(n, k) θ<sup>k</sup>(1 − θ)<sup>n−k</sup></span>. <span class="m">C(12, 0) = 1</span>, <span class="m">C(12, 1) = 12</span>.</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li>(a) Binomial(12, 0.25): mean <span class="m">3</span>, variance <span class="m">12·0.25·0.75 = 2.25</span></li><li>(b) <span class="m">0.75<sup>12</sup> ≈ 0.032</span></li><li>(c) <span class="m">12 · 0.25 · 0.75<sup>11</sup> ≈ 0.127</span></li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">4</span><span class="lvl lvl-med">Medium</span></div>
+        <h3>Two versions of the geometric</h3>
+        <p>You win each game with probability <span class="m">q = 0.25</span>. (a) Expected number of <i>losses</i> before the first win? (b) Expected number of <i>games</i> until the first win, including it? (c) Probability that the first win comes exactly in game 3?</p>
+        <details><summary>Hint</summary><div class="a"><p>Failures version: mean <span class="m">(1 − q)/q</span>. Tries version: mean <span class="m">1/q</span>. For (c): lose, lose, win.</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li>(a) <span class="m">0.75/0.25 = 3</span> losses</li><li>(b) <span class="m">1/0.25 = 4</span> games, which is (a) + 1</li><li>(c) <span class="m">0.75 · 0.75 · 0.25 ≈ 0.141</span></li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">5</span><span class="lvl lvl-med">Medium</span></div>
+        <h3>Last hits on a bell curve</h3>
+        <p>Your last hits at 10 minutes follow <span class="m">N(60, 10²)</span>. (a) What are the mean and variance? (b) Which is bigger: <span class="m">P(X = 60)</span> or <span class="m">P(55 ≤ X ≤ 65)</span>? (c) Can the density <span class="m">p(x)</span> of some distribution be 4?</p>
+        <details><summary>Hint</summary><div class="a"><p>For a continuous X, only areas are probabilities. A single point has width 0.</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li>(a) mean 60, variance 100 (σ = 10)</li><li>(b) <span class="m">P(X = 60) = 0</span>, while <span class="m">P(55 ≤ X ≤ 65)</span> is the area within half a σ of the center, about 0.38. The interval wins.</li><li>(c) Yes. Uniform on [0, 0.25] has height 4, because width × height = 1.</li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">6</span><span class="lvl lvl-exam">Exam-style</span></div>
+        <h3>Name the distribution</h3>
+        <p>Choose Bernoulli, Binomial, Geometric, Categorical, Beta or Gaussian for each: (i) whether first blood happens before minute 2; (ii) successful neutral-camp stacks out of 10 tries; (iii) which of 5 heroes the enemy bans first; (iv) your belief about your stack success rate; (v) your GPM across 200 games; (vi) games you lose before your first win.</p>
+        <details><summary>Hint</summary><div class="a"><p>Ask: yes/no? a count out of n? a label? a probability between 0 and 1? any number near a center? waiting for a success?</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li>(i) Bernoulli · (ii) Binomial · (iii) Categorical</li><li>(iv) Beta, a distribution over a rate · (v) Gaussian, roughly · (vi) Geometric, failures version</li></ul></div></details>
+      </article>
+      <article class="prob">
+        <div class="prob-top"><span class="prob-n">7</span><span class="lvl lvl-hard">Challenge · preview of Day 3</span></div>
+        <h3>A Beta belief gets updated</h3>
+        <p>Your belief about a new Pudge's hook hit rate is <span class="m">Beta(6, 4)</span>. (a) Its mean and variance? (b) Then you watch 5 hits and 5 misses, and your belief becomes <span class="m">Beta(11, 9)</span>. New mean? Did the curve get wider or narrower?</p>
+        <details><summary>Hint</summary><div class="a"><p>Mean <span class="m">a/(a + b)</span>, variance <span class="m">ab / ((a + b)²(a + b + 1))</span>. Check (b) in the explorer with the Beta tab.</p></div></details>
+        <details><summary>Solution</summary><div class="a"><ul class="steps-l"><li>(a) mean <span class="m">6/10 = 0.6</span>, variance <span class="m">24/(100·11) ≈ 0.0218</span> (sd ≈ 0.148)</li><li>(b) mean <span class="m">11/20 = 0.55</span>, variance <span class="m">99/(400·21) ≈ 0.0118</span> (sd ≈ 0.109): narrower. More data, more certainty. Adding counts to a and b is exactly tomorrow's topic.</li></ul></div></details>
+      </article>
     </div>
   </section>
 
