@@ -236,6 +236,47 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
 .prob details{background:var(--paper);padding:13px 16px}
 .prob summary{font-size:15px}
 
+/* lecture */
+.startgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.startbox{background:var(--sky-pale);border-radius:var(--r-xl);padding:clamp(22px,4vw,40px);display:flex;flex-direction:column;gap:14px}
+.startbox.soft{background:var(--green-pale)}
+.startbox h2{font-size:clamp(26px,3.4vw,40px)}
+.checks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.checks li{display:flex;gap:10px;align-items:flex-start}
+.checks li::before{content:"✓";flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--sky);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:2px}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tool{background:var(--white);border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(18px,3vw,26px);display:flex;flex-direction:column;gap:12px;min-width:0}
+.tool.wide{grid-column:1 / -1}
+.tool p{font-size:15.5px;color:#3c4251}
+.tool details{background:var(--paper)}
+.rule{font-family:var(--math);font-style:italic;font-size:clamp(17px,2vw,20px);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center;overflow-x:auto}
+.remember{background:var(--ink);color:var(--white);border-radius:var(--r-m);padding:16px 20px;font-size:16px}
+.remember b{color:var(--cyan)}
+.twocol{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+.prose{display:flex;flex-direction:column;gap:14px;max-width:66ch}
+.prose p{font-size:16px}
+.scard2{background:var(--paper);border-radius:var(--r-l);padding:18px;display:flex;flex-direction:column;gap:10px}
+.scard2 svg{width:100%;height:auto;background:var(--white);border-radius:14px}
+.note2{font-size:14px;color:var(--ink-2)}
+.lesson{background:var(--paper);border-radius:var(--r-xl);padding:clamp(20px,4vw,36px);display:flex;flex-direction:column;gap:18px}
+.lhead{display:flex;gap:14px;align-items:center}
+.lhead h3{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.025em}
+.lhead > div{display:flex;flex-direction:column;gap:6px}
+.lnum{width:46px;height:46px;border-radius:14px;background:var(--sky);color:#fff;display:grid;place-items:center;font:700 20px var(--display);flex-shrink:0}
+.lbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.derive{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden}
+.drow{display:grid;grid-template-columns:78px minmax(0,1fr);gap:4px 12px;padding:12px 16px;border-top:1px solid var(--line);align-items:baseline}
+.drow:first-child{border-top:0}
+.drow .k{font-size:12.5px;font-weight:700;color:#2856b8}
+.drow .eq{font-family:var(--math);font-style:italic;font-size:17px}
+.drow .why{grid-column:2;font-size:14px;color:var(--ink-2)}
+.drow.ans{background:var(--blue-pale)}
+.note-card{background:var(--peach);border-radius:var(--r-m);padding:14px 16px;font-size:15.5px}
+.pitable table{min-width:0;background:var(--white);border-radius:var(--r-m);overflow:hidden}
+.sheetwrap{overflow-x:auto;background:var(--white);border:1px solid var(--line);border-radius:var(--r-l)}
+.sheet{min-width:720px}
+.sheet td{font-size:14.5px}
+@media (max-width:960px){.startgrid,.tools,.twocol,.lbody{grid-template-columns:1fr}}
 @media (max-width:960px){
   .links{display:none}
   .hub-grid{grid-template-columns:1fr;justify-items:center}
@@ -282,7 +323,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#4b8cf5"/><path d="M5 20c3 0 4-10 9-10s6 10 9 10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
       Distribution Valley
     </a>
-    <span class="links"><a href="#basics">Basics</a><a href="#mean">Mean &amp; variance</a><a href="#explorer">Explorer</a><a href="#cards">Six cards</a><a href="#faq">FAQ</a><a href="#practice">Practice</a></span>
+    <span class="links"><a href="#toolbox">Toolbox</a><a href="#mean">Mean &amp; variance</a><a href="#slow">Six distributions</a><a href="#explorer">Explorer</a><a href="#heart">By heart</a><a href="#practice">Practice</a></span>
     <a class="btn dark" href="#explorer">Open explorer</a>
   </nav>
 
@@ -353,6 +394,27 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
     <span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Markov chains</span>
   </div>
 
+  <!-- START -->
+  <section class="section" id="start">
+    <div class="startgrid">
+      <div class="startbox">
+        <span class="tag">Lecture 1 · about 90 minutes</span>
+        <h2>By the end of this lecture you will be able to…</h2>
+        <ul class="checks">
+          <li>explain what a random variable and a distribution are, in your own words</li>
+          <li>read the formula of six distributions piece by piece</li>
+          <li>compute a mean and a variance by hand, and say what they mean</li>
+          <li>pick the right distribution for a situation (an exam favourite)</li>
+        </ul>
+      </div>
+      <div class="startbox soft">
+        <span class="tag">What you need to know already</span>
+        <h3>Only that a probability is a number from 0 to 1.</h3>
+        <p>Everything else (Σ, factorials, “n choose k”, area under a curve, e) is explained in the toolbox below. Read one part, then close your eyes and say the <b>“remember it”</b> line out loud. That is how it sticks.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- BASICS -->
   <section class="section" id="basics">
     <div class="head">
@@ -409,6 +471,52 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
     </div>
   </section>
 
+  <!-- TOOLBOX -->
+  <section class="section left" id="toolbox">
+    <div class="head">
+      <span class="tag">Math toolbox</span>
+      <h2>Five Small Tools You Will Use All Day</h2>
+      <p>Each tool has a rule, plain words, a tiny Dota example and a “try it” question.</p>
+    </div>
+    <div class="tools">
+      <article class="tool">
+        <span class="kind">Tool 1</span>
+        <h3>A distribution adds up to 1</h3>
+        <p>A <b>random variable</b> X is a number that depends on chance, like your kills in the next fight. Its <b>distribution</b> lists every possible value and how likely it is. Something must happen, so all the probabilities together are exactly 1.</p>
+        <div class="rule">p(0) + p(1) + p(2) + … = 1</div>
+        <details><summary>Try it: p(0) = 0.5, p(1) = 0.3. If 2 kills is the only other option, what is p(2)?</summary><div class="a"><p><span class="m">1 − 0.5 − 0.3 = 0.2</span>.</p></div></details>
+      </article>
+      <article class="tool">
+        <span class="kind">Tool 2</span>
+        <h3>Σ means “add them all”</h3>
+        <p>The big Greek letter Σ (sigma) is short for a long sum. <span class="m">Σ<sub>x</sub> x · p(x)</span> means: for every possible value x, compute x · p(x), then add the results.</p>
+        <div class="rule">Σ<sub>x</sub> x · p(x) = 0·p(0) + 1·p(1) + 2·p(2) + …</div>
+        <details><summary>Try it: compute Σ x·p(x) for p(0)=0.5, p(1)=0.3, p(2)=0.2.</summary><div class="a"><p><span class="m">0 + 0.3 + 0.4 = 0.7</span>. That is the mean, explained later.</p></div></details>
+      </article>
+      <article class="tool">
+        <span class="kind">Tool 3</span>
+        <h3>n choose k: how many orders?</h3>
+        <p>Mirana shoots 4 arrows and hits 2. In how many orders can that happen? List them: HHMM, HMHM, HMMH, MHHM, MHMH, MMHH. Six. The formula gives the same count:</p>
+        <div class="rule">C(n, k) = n! / (k! (n − k)!) &nbsp;&nbsp; C(4, 2) = 24 / (2 · 2) = 6</div>
+        <p><span class="m">n!</span> (“n factorial”) means <span class="m">n · (n − 1) · … · 1</span>, so <span class="m">4! = 24</span>, and <span class="m">0! = 1</span>.</p>
+        <details><summary>Try it: C(3, 1)? List the orders too.</summary><div class="a"><p><span class="m">3!/(1!·2!) = 6/2 = 3</span>: HMM, MHM, MMH.</p></div></details>
+      </article>
+      <article class="tool">
+        <span class="kind">Tool 4</span>
+        <h3>For curves, probability is area</h3>
+        <p>When X can be any number (ping in ms, a hit rate between 0 and 1), we draw a curve, the <b>density</b>. The probability that X lands between a and b is the <b>area</b> under the curve from a to b. The whole area is 1. You don't need calculus today: think “area of a shape”.</p>
+        <div class="rule">P(a ≤ X ≤ b) = area under p(x) from a to b</div>
+        <details><summary>Try it: a flat density on [0, 4] has which height?</summary><div class="a"><p>Width 4 × height h = 1, so <span class="m">h = 1/4</span>.</p></div></details>
+      </article>
+      <article class="tool wide">
+        <span class="kind">Tool 5</span>
+        <h3>The number e and exp</h3>
+        <p><span class="m">e ≈ 2.718</span> is a special constant, like π. <span class="m">exp(a)</span> is just another way to write <span class="m">e<sup>a</sup></span>. What you need to know: <span class="m">exp(0) = 1</span>, and <span class="m">exp(−big number)</span> is close to 0. That is why the Gaussian formula with <span class="m">exp(−(x − μ)²/2σ²)</span> is highest at x = μ and falls off on both sides.</p>
+      </article>
+    </div>
+    <p class="remember"><b>Remember it:</b> probabilities add up to 1 (bars) or have area 1 (curves); Σ means add; C(n, k) counts orders.</p>
+  </section>
+
   <!-- MEAN & VARIANCE -->
   <section class="section left" id="mean">
     <div class="head">
@@ -445,6 +553,148 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
         <div class="rule"><span class="m">Var(aX + b) = a²·Var(X)</span><span>Adding b moves the center but not the spread. Multiplying by a scales the spread by a².</span></div>
       </div>
     </div>
+  </section>
+
+  <!-- WHY SQUARE -->
+  <section class="section left" id="whysquare">
+    <div class="head">
+      <span class="tag">Why variance uses squares</span>
+      <h2>Why Not Just Average the Distances?</h2>
+    </div>
+    <div class="twocol">
+      <div class="prose">
+        <p>Take a player who gets 0 kills in half the fights and 2 kills in the other half. The mean is 1. Distances from the mean: <span class="m">0 − 1 = −1</span> and <span class="m">2 − 1 = +1</span>. Their average is <b>0</b>, as if there were no spread at all. Left and right cancel.</p>
+        <p>Squaring makes every distance positive: <span class="m">(−1)² = 1</span>, <span class="m">(+1)² = 1</span>. The average squared distance is 1. That is the variance:</p>
+        <div class="rule">Var(X) = E[(X − μ)²] = average squared distance from the mean</div>
+        <p>The shortcut <span class="m">E[X²] − μ²</span> gives the same number and is faster by hand. Here: <span class="m">E[X²] = 0·0.5 + 4·0.5 = 2</span>, so <span class="m">2 − 1² = 1</span> ✓.</p>
+        <p>The <b>standard deviation</b> σ = √Var brings it back to normal units (kills, not kills²).</p>
+      </div>
+      <div class="scard2">
+        <svg viewBox="0 0 320 170" role="img" aria-label="Two dots at 0 and 2 kills, mean at 1, distances minus one and plus one">
+          <line x1="20" y1="120" x2="300" y2="120" stroke="#c9d0dc" stroke-width="2"/>
+          <g font-family="Instrument Sans, sans-serif" font-size="13" fill="#596071" text-anchor="middle"><text x="60" y="145">0</text><text x="160" y="145">1</text><text x="260" y="145">2</text></g>
+          <circle cx="60" cy="120" r="10" fill="#4b8cf5"/><circle cx="260" cy="120" r="10" fill="#4b8cf5"/>
+          <line x1="160" y1="40" x2="160" y2="125" stroke="#ff8a3d" stroke-width="3" stroke-dasharray="6 5"/>
+          <text x="160" y="32" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#c25d14">mean 1</text>
+          <path d="M150 90 H70" stroke="#121419" stroke-width="2" marker-end="url(#arr)"/><path d="M170 90 H250" stroke="#121419" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="110" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#121419">−1</text><text x="210" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#121419">+1</text>
+          <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#121419"/></marker></defs>
+        </svg>
+        <p class="note2">Without squares: −1 + 1 = 0, no spread. With squares: 1 + 1, the spread shows.</p>
+      </div>
+    </div>
+    <p class="remember"><b>Remember it:</b> mean = center (weighted average); variance = average <i>squared</i> distance from the center, squared so left and right don't cancel.</p>
+  </section>
+
+  <!-- SIX SLOWLY -->
+  <section class="section left" id="slow">
+    <div class="head">
+      <span class="tag">The six distributions, slowly</span>
+      <h2>One Story, One Formula, One Calculation Each</h2>
+      <p>For each: when do you use it, what does every piece of the formula mean, a small calculation, and the line to remember.</p>
+    </div>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">1</span><div><h3>Bernoulli(θ): one yes/no</h3><span class="kind">discrete</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> One Mirana arrow: hit (X = 1) or miss (X = 0). θ is the chance of a hit.</p>
+          <div class="rule">p(x) = θ<sup>x</sup> (1 − θ)<sup>1−x</sup>, x ∈ {0, 1}</div>
+          <p><b>Piece by piece.</b> Put in x = 1: <span class="m">θ¹(1 − θ)⁰ = θ</span>. Put in x = 0: <span class="m">θ⁰(1 − θ)¹ = 1 − θ</span>. The powers are just a trick to write both cases in one formula.</p>
+        </div>
+        <div class="derive">
+          <div class="drow"><span class="k">mean</span><span class="eq">E[X] = 0·(1 − θ) + 1·θ = θ</span><span class="why">Tool 2: value × probability, added</span></div>
+          <div class="drow"><span class="k">E[X²]</span><span class="eq">0²·(1 − θ) + 1²·θ = θ</span><span class="why">0² = 0 and 1² = 1</span></div>
+          <div class="drow ans"><span class="k">variance</span><span class="eq">θ − θ² = θ(1 − θ)</span><span class="why">shortcut E[X²] − μ²</span></div>
+        </div>
+      </div>
+      <p class="remember"><b>Remember it:</b> one yes/no; mean θ, variance θ(1 − θ), which is biggest at θ = 0.5 (most unpredictable).</p>
+    </article>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">2</span><div><h3>Binomial(n, θ): how many yes out of n</h3><span class="kind">discrete</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> Mirana shoots n arrows, each hits with chance θ, independently. X = number of hits.</p>
+          <div class="rule">p(k) = C(n, k) · θ<sup>k</sup> · (1 − θ)<sup>n−k</sup></div>
+          <p><b>Piece by piece.</b> <span class="m">θ<sup>k</sup></span>: k hits. <span class="m">(1 − θ)<sup>n−k</sup></span>: the other n − k miss. <span class="m">C(n, k)</span>: the number of orders (Tool 3), because HHMM and MHMH both count as “2 hits”.</p>
+        </div>
+        <div class="derive">
+          <div class="drow"><span class="k">example</span><span class="eq">n = 4, θ = 0.5: p(2) = 6 · 0.5² · 0.5² = 6/16 = 0.375</span><span class="why">C(4, 2) = 6 orders, each with probability 1/16</span></div>
+          <div class="drow"><span class="k">mean</span><span class="eq">E[X] = nθ = 4 · 0.5 = 2</span><span class="why">n Bernoullis, each with mean θ: means add up</span></div>
+          <div class="drow ans"><span class="k">variance</span><span class="eq">nθ(1 − θ) = 4 · 0.5 · 0.5 = 1</span><span class="why">independent shots: variances add up too</span></div>
+        </div>
+      </div>
+      <p class="remember"><b>Remember it:</b> Binomial = n Bernoullis added up. That is why its mean is nθ and its variance nθ(1 − θ).</p>
+    </article>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">3</span><div><h3>Geometric(q): waiting for the first success</h3><span class="kind">discrete</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> You win each game with chance q. X = number of losses before your first win.</p>
+          <div class="rule">p(k) = (1 − q)<sup>k</sup> · q, k = 0, 1, 2, …</div>
+          <p><b>Piece by piece.</b> Read it as a story in time: lose, lose, …, lose (k times, each 1 − q), then win (q). Independent games, so multiply. No C(n, k) here: there is only one order, the win always comes last.</p>
+        </div>
+        <div class="derive">
+          <div class="drow"><span class="k">example</span><span class="eq">q = 0.25: p(0) = 0.25, p(1) = 0.75·0.25 ≈ 0.19, p(2) ≈ 0.14</span><span class="why">each extra loss multiplies by 0.75, so the bars shrink</span></div>
+          <div class="drow ans"><span class="k">mean</span><span class="eq">E[X] = (1 − q)/q = 0.75/0.25 = 3</span><span class="why">you win 1 game in 4 on average, so about 3 losses come first</span></div>
+          <div class="drow"><span class="k">variance</span><span class="eq">(1 − q)/q² = 12</span><span class="why">long losing streaks are possible, so the spread is big</span></div>
+        </div>
+      </div>
+      <div class="note-card"><b>Exam trap.</b> Some books count games <i>including</i> the win: y = k + 1, <span class="m">p(y) = q(1 − q)<sup>y−1</sup></span>, mean <span class="m">1/q</span>. The 2025 final used the first version, the 2026 final the second. Always check where the counting starts.</div>
+      <p class="remember"><b>Remember it:</b> lose k times, then win: (1 − q)<sup>k</sup>q. Mean (1 − q)/q losses.</p>
+    </article>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">4</span><div><h3>Categorical(π): one of K labels</h3><span class="kind">discrete</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> Which role does the enemy pick first? Five labels, each with its own probability <span class="m">π<sub>k</sub></span> (pi). It is a die with K sides that need not be fair.</p>
+          <div class="rule">p(X = k) = π<sub>k</sub>, π<sub>1</sub> + … + π<sub>K</sub> = 1</div>
+          <p><b>No mean, no variance.</b> The outcomes are names, not numbers. “The average of carry and mid” means nothing. Instead you talk about the most likely label (the mode).</p>
+        </div>
+        <div class="pitable">
+          <table><thead><tr><th>role</th><th>π</th></tr></thead><tbody><tr><td>carry</td><td>0.40</td></tr><tr><td>mid</td><td>0.25</td></tr><tr><td>offlane</td><td>0.15</td></tr><tr><td>soft support</td><td>0.10</td></tr><tr><td>hard support</td><td>0.10</td></tr><tr><td><b>sum</b></td><td><b>1.00</b></td></tr></tbody></table>
+        </div>
+      </div>
+      <p class="remember"><b>Remember it:</b> Bernoulli with K options instead of 2. Probabilities add to 1; no mean because labels are not numbers.</p>
+    </article>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">5</span><div><h3>Beta(a, b): a belief about a probability</h3><span class="kind cont">continuous</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> You don't know a new Mirana's hit rate θ. The Beta distribution describes your <b>belief</b> about θ: which values between 0 and 1 seem likely.</p>
+          <div class="rule">p(θ) = θ<sup>a−1</sup> (1 − θ)<sup>b−1</sup> / B(a, b), 0 &lt; θ &lt; 1</div>
+          <p><b>Piece by piece.</b> <span class="m">θ<sup>a−1</sup>(1 − θ)<sup>b−1</sup></span> is the shape; it looks just like “a − 1 hits and b − 1 misses”. <span class="m">B(a, b)</span> is only a number that makes the area equal to 1 (Tool 4). You never compute it by hand on the exam.</p>
+        </div>
+        <div class="derive">
+          <div class="drow"><span class="k">a = b = 1</span><span class="eq">p(θ) = 1, flat</span><span class="why">“no idea”: every hit rate equally believable</span></div>
+          <div class="drow"><span class="k">a = 8, b = 4</span><span class="eq">mean = 8/12 ≈ 0.67</span><span class="why">like having seen more hits than misses: the curve leans right</span></div>
+          <div class="drow ans"><span class="k">mean</span><span class="eq">E[θ] = a/(a + b)</span><span class="why">“hits ÷ total” in pseudo-counts; it is on the formula sheet</span></div>
+          <div class="drow"><span class="k">width</span><span class="eq">bigger a + b → narrower curve</span><span class="why">more (pseudo) data means more certainty</span></div>
+        </div>
+      </div>
+      <p class="remember"><b>Remember it:</b> Beta lives on [0, 1]; think a = hits, b = misses; mean a/(a + b); more total → narrower.</p>
+    </article>
+
+    <article class="lesson">
+      <div class="lhead"><span class="lnum">6</span><div><h3>Gaussian N(μ, σ²): the bell curve</h3><span class="kind cont">continuous</span></div></div>
+      <div class="lbody">
+        <div class="prose">
+          <p><b>Story.</b> Last hits at 10 minutes over many games: most games are near your usual number, a few are much higher or lower.</p>
+          <div class="rule">p(x) = (1/√(2πσ²)) · exp(−(x − μ)² / (2σ²))</div>
+          <p><b>Piece by piece.</b> <span class="m">(x − μ)²</span>: squared distance from the center μ. Divided by <span class="m">2σ²</span>: a large spread σ² makes far values less “expensive”. <span class="m">exp(−…)</span>: equals 1 at the center and drops toward 0 far away (Tool 5). <span class="m">1/√(2πσ²)</span>: only makes the area 1.</p>
+        </div>
+        <div class="derive">
+          <div class="drow"><span class="k">mean</span><span class="eq">E[X] = μ</span><span class="why">the curve is symmetric around μ</span></div>
+          <div class="drow"><span class="k">variance</span><span class="eq">Var(X) = σ²</span><span class="why">σ is the typical distance from the center</span></div>
+          <div class="drow ans"><span class="k">68–95 rule</span><span class="eq">N(60, 10²): 68% in [50, 70], 95% in [40, 80]</span><span class="why">within 1σ and 2σ of the center</span></div>
+        </div>
+      </div>
+      <p class="remember"><b>Remember it:</b> center μ, spread σ²; highest at μ, falls off by the squared distance; 68% within one σ.</p>
+    </article>
   </section>
 
   <!-- EXPLORER -->
@@ -579,6 +829,34 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <details><summary>3. You win each game with probability 0.2. Expected games lost before the first win?</summary><div class="a"><p>Geometric, failures version: <span class="m">(1 − q)/q = 0.8/0.2 = 4</span> games.</p></div></details>
       <details><summary>4. Your belief about an arrow hit rate is Beta(2, 8). What is its mean?</summary><div class="a"><p><span class="m">a/(a + b) = 2/10 = 0.2</span>. You expect a 20% hit rate.</p></div></details>
       <details><summary>5. X has mean 0.7 and variance 0.61. What are the mean and variance of 2X + 1?</summary><div class="a"><p>Mean <span class="m">2 · 0.7 + 1 = 2.4</span>. Variance <span class="m">2² · 0.61 = 2.44</span>. The “+1” does not change the spread.</p></div></details>
+    </div>
+  </section>
+
+  <!-- BY HEART -->
+  <section class="section left" id="heart">
+    <div class="head">
+      <span class="tag">Learn it by heart</span>
+      <h2>One Table and Five Questions to Say Out Loud</h2>
+    </div>
+    <div class="sheetwrap">
+      <table class="sheet">
+        <thead><tr><th>Distribution</th><th>Use it when…</th><th>p(x)</th><th>Mean</th><th>Variance</th></tr></thead>
+        <tbody>
+          <tr><td>Bernoulli(θ)</td><td>one yes/no</td><td><span class="m">θ<sup>x</sup>(1−θ)<sup>1−x</sup></span></td><td><span class="m">θ</span></td><td><span class="m">θ(1−θ)</span></td></tr>
+          <tr><td>Binomial(n, θ)</td><td>count of yes in n tries</td><td><span class="m">C(n,k)θ<sup>k</sup>(1−θ)<sup>n−k</sup></span></td><td><span class="m">nθ</span></td><td><span class="m">nθ(1−θ)</span></td></tr>
+          <tr><td>Geometric(q)</td><td>failures before first success</td><td><span class="m">(1−q)<sup>k</sup>q</span></td><td><span class="m">(1−q)/q</span></td><td><span class="m">(1−q)/q²</span></td></tr>
+          <tr><td>Categorical(π)</td><td>one of K labels</td><td><span class="m">π<sub>k</sub></span></td><td>—</td><td>—</td></tr>
+          <tr><td>Beta(a, b)</td><td>belief about a probability</td><td><span class="m">θ<sup>a−1</sup>(1−θ)<sup>b−1</sup>/B(a,b)</span></td><td><span class="m">a/(a+b)</span></td><td><span class="m">ab/((a+b)²(a+b+1))</span></td></tr>
+          <tr><td>Gaussian(μ, σ²)</td><td>numbers around a center</td><td><span class="m">exp(−(x−μ)²/2σ²)/√(2πσ²)</span></td><td><span class="m">μ</span></td><td><span class="m">σ²</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="faq">
+      <details><summary>What is a random variable? Say it with a Dota example.</summary><div class="a"><p>A number that depends on chance, like your kills in the next teamfight. Before the fight you only know how likely each value is.</p></div></details>
+      <details><summary>Why is the Binomial mean nθ?</summary><div class="a"><p>A Binomial is n Bernoulli shots added up. Each shot has mean θ, and means add up, so n · θ.</p></div></details>
+      <details><summary>Why does the Binomial formula have C(n, k) but the Geometric does not?</summary><div class="a"><p>“2 hits out of 4” can happen in 6 orders, so we count them. “k losses, then the first win” has only one order: the win is always last.</p></div></details>
+      <details><summary>Why can a density be bigger than 1, but a probability can't?</summary><div class="a"><p>For curves, probability is area. A tall, thin shape can have height 4 and still area 1. Only areas must stay between 0 and 1.</p></div></details>
+      <details><summary>What do a and b “feel like” in Beta(a, b)?</summary><div class="a"><p>Hits and misses you have (pseudo-)seen. Mean a/(a + b) is hits over total, and more total makes the curve narrower: more certainty.</p></div></details>
     </div>
   </section>
 
