@@ -274,8 +274,9 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
 .note-card{background:var(--peach);border-radius:var(--r-m);padding:14px 16px;font-size:15.5px}
 .pitable table{min-width:0;background:var(--white);border-radius:var(--r-m);overflow:hidden}
 .sheetwrap{overflow-x:auto;background:var(--white);border:1px solid var(--line);border-radius:var(--r-l)}
-.sheet{min-width:720px}
-.sheet td{font-size:14.5px}
+.dsheet{min-width:720px}
+.dsheet td{font-size:14.5px}
+.sheetwrap{min-width:0;max-width:100%}
 @media (max-width:960px){.startgrid,.tools,.twocol,.lbody{grid-template-columns:1fr}}
 @media (max-width:960px){
   .links{display:none}
@@ -839,7 +840,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <h2>One Table and Five Questions to Say Out Loud</h2>
     </div>
     <div class="sheetwrap">
-      <table class="sheet">
+      <table class="dsheet">
         <thead><tr><th>Distribution</th><th>Use it when…</th><th>p(x)</th><th>Mean</th><th>Variance</th></tr></thead>
         <tbody>
           <tr><td>Bernoulli(θ)</td><td>one yes/no</td><td><span class="m">θ<sup>x</sup>(1−θ)<sup>1−x</sup></span></td><td><span class="m">θ</span></td><td><span class="m">θ(1−θ)</span></td></tr>
