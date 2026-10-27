@@ -249,7 +249,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
 .tool.wide{grid-column:1 / -1}
 .tool p{font-size:15.5px;color:#3c4251}
 .tool details{background:var(--paper)}
-.rule{font-family:var(--math);font-style:italic;font-size:clamp(17px,2vw,20px);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center;overflow-x:auto}
+.frm{display:block;font-family:var(--math);font-style:italic;font-size:clamp(17px,2vw,20px);line-height:1.6;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center;overflow-x:auto}
 .remember{background:var(--ink);color:var(--white);border-radius:var(--r-m);padding:16px 20px;font-size:16px}
 .remember b{color:var(--cyan)}
 .twocol{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -484,21 +484,21 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
         <span class="kind">Tool 1</span>
         <h3>A distribution adds up to 1</h3>
         <p>A <b>random variable</b> X is a number that depends on chance, like your kills in the next fight. Its <b>distribution</b> lists every possible value and how likely it is. Something must happen, so all the probabilities together are exactly 1.</p>
-        <div class="rule">p(0) + p(1) + p(2) + … = 1</div>
+        <div class="frm">p(0) + p(1) + p(2) + … = 1</div>
         <details><summary>Try it: p(0) = 0.5, p(1) = 0.3. If 2 kills is the only other option, what is p(2)?</summary><div class="a"><p><span class="m">1 − 0.5 − 0.3 = 0.2</span>.</p></div></details>
       </article>
       <article class="tool">
         <span class="kind">Tool 2</span>
         <h3>Σ means “add them all”</h3>
         <p>The big Greek letter Σ (sigma) is short for a long sum. <span class="m">Σ<sub>x</sub> x · p(x)</span> means: for every possible value x, compute x · p(x), then add the results.</p>
-        <div class="rule">Σ<sub>x</sub> x · p(x) = 0·p(0) + 1·p(1) + 2·p(2) + …</div>
+        <div class="frm">Σ<sub>x</sub> x · p(x) = 0·p(0) + 1·p(1) + 2·p(2) + …</div>
         <details><summary>Try it: compute Σ x·p(x) for p(0)=0.5, p(1)=0.3, p(2)=0.2.</summary><div class="a"><p><span class="m">0 + 0.3 + 0.4 = 0.7</span>. That is the mean, explained later.</p></div></details>
       </article>
       <article class="tool">
         <span class="kind">Tool 3</span>
         <h3>n choose k: how many orders?</h3>
         <p>Mirana shoots 4 arrows and hits 2. In how many orders can that happen? List them: HHMM, HMHM, HMMH, MHHM, MHMH, MMHH. Six. The formula gives the same count:</p>
-        <div class="rule">C(n, k) = n! / (k! (n − k)!) &nbsp;&nbsp; C(4, 2) = 24 / (2 · 2) = 6</div>
+        <div class="frm">C(n, k) = n! / (k! (n − k)!) &nbsp;&nbsp; C(4, 2) = 24 / (2 · 2) = 6</div>
         <p><span class="m">n!</span> (“n factorial”) means <span class="m">n · (n − 1) · … · 1</span>, so <span class="m">4! = 24</span>, and <span class="m">0! = 1</span>.</p>
         <details><summary>Try it: C(3, 1)? List the orders too.</summary><div class="a"><p><span class="m">3!/(1!·2!) = 6/2 = 3</span>: HMM, MHM, MMH.</p></div></details>
       </article>
@@ -506,7 +506,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
         <span class="kind">Tool 4</span>
         <h3>For curves, probability is area</h3>
         <p>When X can be any number (ping in ms, a hit rate between 0 and 1), we draw a curve, the <b>density</b>. The probability that X lands between a and b is the <b>area</b> under the curve from a to b. The whole area is 1. You don't need calculus today: think “area of a shape”.</p>
-        <div class="rule">P(a ≤ X ≤ b) = area under p(x) from a to b</div>
+        <div class="frm">P(a ≤ X ≤ b) = area under p(x) from a to b</div>
         <details><summary>Try it: a flat density on [0, 4] has which height?</summary><div class="a"><p>Width 4 × height h = 1, so <span class="m">h = 1/4</span>.</p></div></details>
       </article>
       <article class="tool wide">
@@ -566,7 +566,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="prose">
         <p>Take a player who gets 0 kills in half the fights and 2 kills in the other half. The mean is 1. Distances from the mean: <span class="m">0 − 1 = −1</span> and <span class="m">2 − 1 = +1</span>. Their average is <b>0</b>, as if there were no spread at all. Left and right cancel.</p>
         <p>Squaring makes every distance positive: <span class="m">(−1)² = 1</span>, <span class="m">(+1)² = 1</span>. The average squared distance is 1. That is the variance:</p>
-        <div class="rule">Var(X) = E[(X − μ)²] = average squared distance from the mean</div>
+        <div class="frm">Var(X) = E[(X − μ)²] = average squared distance from the mean</div>
         <p>The shortcut <span class="m">E[X²] − μ²</span> gives the same number and is faster by hand. Here: <span class="m">E[X²] = 0·0.5 + 4·0.5 = 2</span>, so <span class="m">2 − 1² = 1</span> ✓.</p>
         <p>The <b>standard deviation</b> σ = √Var brings it back to normal units (kills, not kills²).</p>
       </div>
@@ -600,7 +600,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> One Mirana arrow: hit (X = 1) or miss (X = 0). θ is the chance of a hit.</p>
-          <div class="rule">p(x) = θ<sup>x</sup> (1 − θ)<sup>1−x</sup>, x ∈ {0, 1}</div>
+          <div class="frm">p(x) = θ<sup>x</sup> (1 − θ)<sup>1−x</sup>, x ∈ {0, 1}</div>
           <p><b>Piece by piece.</b> Put in x = 1: <span class="m">θ¹(1 − θ)⁰ = θ</span>. Put in x = 0: <span class="m">θ⁰(1 − θ)¹ = 1 − θ</span>. The powers are just a trick to write both cases in one formula.</p>
         </div>
         <div class="derive">
@@ -617,7 +617,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> Mirana shoots n arrows, each hits with chance θ, independently. X = number of hits.</p>
-          <div class="rule">p(k) = C(n, k) · θ<sup>k</sup> · (1 − θ)<sup>n−k</sup></div>
+          <div class="frm">p(k) = C(n, k) · θ<sup>k</sup> · (1 − θ)<sup>n−k</sup></div>
           <p><b>Piece by piece.</b> <span class="m">θ<sup>k</sup></span>: k hits. <span class="m">(1 − θ)<sup>n−k</sup></span>: the other n − k miss. <span class="m">C(n, k)</span>: the number of orders (Tool 3), because HHMM and MHMH both count as “2 hits”.</p>
         </div>
         <div class="derive">
@@ -634,7 +634,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> You win each game with chance q. X = number of losses before your first win.</p>
-          <div class="rule">p(k) = (1 − q)<sup>k</sup> · q, k = 0, 1, 2, …</div>
+          <div class="frm">p(k) = (1 − q)<sup>k</sup> · q, k = 0, 1, 2, …</div>
           <p><b>Piece by piece.</b> Read it as a story in time: lose, lose, …, lose (k times, each 1 − q), then win (q). Independent games, so multiply. No C(n, k) here: there is only one order, the win always comes last.</p>
         </div>
         <div class="derive">
@@ -652,7 +652,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> Which role does the enemy pick first? Five labels, each with its own probability <span class="m">π<sub>k</sub></span> (pi). It is a die with K sides that need not be fair.</p>
-          <div class="rule">p(X = k) = π<sub>k</sub>, π<sub>1</sub> + … + π<sub>K</sub> = 1</div>
+          <div class="frm">p(X = k) = π<sub>k</sub>, π<sub>1</sub> + … + π<sub>K</sub> = 1</div>
           <p><b>No mean, no variance.</b> The outcomes are names, not numbers. “The average of carry and mid” means nothing. Instead you talk about the most likely label (the mode).</p>
         </div>
         <div class="pitable">
@@ -667,7 +667,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> You don't know a new Mirana's hit rate θ. The Beta distribution describes your <b>belief</b> about θ: which values between 0 and 1 seem likely.</p>
-          <div class="rule">p(θ) = θ<sup>a−1</sup> (1 − θ)<sup>b−1</sup> / B(a, b), 0 &lt; θ &lt; 1</div>
+          <div class="frm">p(θ) = θ<sup>a−1</sup> (1 − θ)<sup>b−1</sup> / B(a, b), 0 &lt; θ &lt; 1</div>
           <p><b>Piece by piece.</b> <span class="m">θ<sup>a−1</sup>(1 − θ)<sup>b−1</sup></span> is the shape; it looks just like “a − 1 hits and b − 1 misses”. <span class="m">B(a, b)</span> is only a number that makes the area equal to 1 (Tool 4). You never compute it by hand on the exam.</p>
         </div>
         <div class="derive">
@@ -685,7 +685,7 @@ footer{text-align:center;color:var(--ink-2);font-size:13px;padding-top:18px}
       <div class="lbody">
         <div class="prose">
           <p><b>Story.</b> Last hits at 10 minutes over many games: most games are near your usual number, a few are much higher or lower.</p>
-          <div class="rule">p(x) = (1/√(2πσ²)) · exp(−(x − μ)² / (2σ²))</div>
+          <div class="frm">p(x) = (1/√(2πσ²)) · exp(−(x − μ)² / (2σ²))</div>
           <p><b>Piece by piece.</b> <span class="m">(x − μ)²</span>: squared distance from the center μ. Divided by <span class="m">2σ²</span>: a large spread σ² makes far values less “expensive”. <span class="m">exp(−…)</span>: equals 1 at the center and drops toward 0 far away (Tool 5). <span class="m">1/√(2πσ²)</span>: only makes the area 1.</p>
         </div>
         <div class="derive">
